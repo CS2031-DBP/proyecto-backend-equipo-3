@@ -15,22 +15,22 @@ public class Activity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "address")
+    @Column(name = "address", nullable = false)
     private String address;
 
-    @Column(name = "end_date")
+    @Column(name = "end_date", nullable = false)
     private LocalDateTime endDate;
 
-    @Column(name = "start_date")
+    @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;
 
-    @Column(name = "activity_status")
+    @Column(name = "activity_status", nullable = false)
     private ActivityStatus activityStatus;
 
-    @Column(name = "activity_type")
+    @Column(name = "activity_type", nullable = false)
     private ActivityType activityType;
 
     @ManyToOne(fetch = FetchType.LAZY)

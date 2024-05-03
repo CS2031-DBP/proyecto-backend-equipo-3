@@ -15,25 +15,25 @@ public class Pet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "birth_date")
+    @Column(name = "birth_date", nullable = false)
     private LocalDateTime birthDate;
 
-    @Column(name = "sex")
+    @Column(name = "sex", nullable = false)
     private String sex;
 
-    @Column(name = "breed")
+    @Column(name = "breed", nullable = false)
     private String breed;
 
-    @Column(name = "weight")
+    @Column(name = "weight", nullable = false)
     private Double Weight;
 
-    @Column(name = "pet_status")
+    @Column(name = "pet_status", nullable = false)
     private PetStatus petStatus;
 
-    @Column(name = "species")
+    @Column(name = "species", nullable = false)
     private Species species;
 
 

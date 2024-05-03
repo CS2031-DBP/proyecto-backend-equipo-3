@@ -23,13 +23,13 @@ public class Subscription {
     @EmbeddedId
     private PersonCompanyId id;
 
-    @Column(name = "subscription_date")
+    @Column(name = "subscription_date", nullable = false)
     private LocalDateTime subscriptionDate;
 
-    @Column(name = "receive_notifs")
+    @Column(name = "receive_notifs", nullable = false)
     private boolean receiveNotifs;
 
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)

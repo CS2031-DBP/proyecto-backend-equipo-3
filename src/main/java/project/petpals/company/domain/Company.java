@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 public class Company extends User {
 
-    @Column(name = "ruc")
+    @Column(name = "ruc", nullable = false)
     private String ruc;
 
     @OneToMany
