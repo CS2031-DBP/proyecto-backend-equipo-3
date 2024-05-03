@@ -1,4 +1,7 @@
 package project.petpals.activity.infrastructure;
 
-public interface ActivityRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import project.petpals.activity.domain.Activity;
+
+public interface ActivityRepository extends JpaRepository<Activity, Long> {
 }

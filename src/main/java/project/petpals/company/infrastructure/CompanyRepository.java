@@ -1,4 +1,7 @@
 package project.petpals.company.infrastructure;
 
-public interface CompanyRepository {
+import project.petpals.company.domain.Company;
+import project.petpals.user.infrastructure.UserRepository;
+
+public interface CompanyRepository extends UserRepository<Company> {
 }

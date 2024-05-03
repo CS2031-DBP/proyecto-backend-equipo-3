@@ -1,4 +1,7 @@
 package project.petpals.subscription.infrastructure;
 
-public interface SubscriptionRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import project.petpals.subscription.domain.Subscription;
+
+public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
 }
