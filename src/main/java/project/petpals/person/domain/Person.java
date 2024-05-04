@@ -13,9 +13,9 @@ import java.util.List;
 @Data
 @Entity
 public class Person extends User {
-    @OneToMany
-    private List<Subscription> subscriptions;
-
-    @OneToMany
-    private List<Adoption> adoptions;
+//    @OneToMany
+//    private List<Subscription> subscriptions;
+//
+//    @OneToMany
+//    private List<Adoption> adoptions;
 }

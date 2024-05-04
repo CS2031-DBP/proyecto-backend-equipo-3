@@ -17,11 +17,11 @@ public class Company extends User {
     @Column(name = "ruc", nullable = false)
     private String ruc;
 
-    @OneToMany
-    private List<Subscription> subscriptions;
-
-    @OneToMany
-    private List<Activity> activities;
+//    @OneToMany
+//    private List<Subscription> subscriptions;
+//
+//    @OneToMany
+//    private List<Activity> activities;
 // mayhaps delete this??? ^
     // also create drop uwuwm
 }
