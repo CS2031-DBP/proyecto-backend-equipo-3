@@ -7,9 +7,9 @@
 Los integrantes de este grupo son:
 
 - Héctor Ponce de León Vargas
-- Andrea Coa  
+- Andrea Fernanda Coa Cruz
 - Jesús Gadiel Balarde Tipte
-- Joaquin 
+- Joaquin Huaman Garcia
 
 ## Descripción del proyecto
 
