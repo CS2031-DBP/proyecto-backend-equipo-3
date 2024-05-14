@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import project.petpals.AbstractContainerBaseTest;
 import project.petpals.company.domain.Company;
 import project.petpals.company.infrastructure.CompanyRepository;
@@ -34,7 +35,7 @@ public class SubscriptionRepositoryTest extends AbstractContainerBaseTest {
     private SubscriptionRepository subsRepository;
 
     @Autowired
-    EntityManager entityManager;
+    TestEntityManager entityManager;
 
     private Person person;
     private Company company;

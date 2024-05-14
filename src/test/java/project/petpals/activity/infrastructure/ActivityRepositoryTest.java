@@ -99,6 +99,14 @@ public class ActivityRepositoryTest extends AbstractContainerBaseTest {
 
     }
 
+    @Test
+    void testFindByStatus() {
+        Pageable page = PageRequest.of(0,5);
+        Page<Activity> res = activityRepository.findAllByActivityStatus(ActivityStatus.NOT_STARTED, page);
+        assertEquals(1,res.getTotalElements());
+        assertEquals(activity, res.stream().findFirst().get());
+    }
+
 
 
 
@@ -108,4 +116,5 @@ public class ActivityRepositoryTest extends AbstractContainerBaseTest {
  * - Create an activity and save all of its attributes
  * - Find all by type
  * - Find all by Date greater than
+ * - Find all activities in progress
  * */
