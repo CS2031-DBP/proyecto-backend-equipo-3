@@ -1,12 +1,5 @@
 package project.petpals.subscription.infrastructure;
 
-import jakarta.persistence.EntityManager;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import project.petpals.AbstractContainerBaseTest;
 import project.petpals.company.domain.Company;
 import project.petpals.company.infrastructure.CompanyRepository;
@@ -15,67 +8,106 @@ import project.petpals.person.infrastructure.PersonRepository;
 import project.petpals.subscription.domain.PersonCompanyId;
 import project.petpals.subscription.domain.Status;
 import project.petpals.subscription.domain.Subscription;
+import project.petpals.user.domain.Role;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
+@Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class SubscriptionRepositoryTest extends AbstractContainerBaseTest {
 
     @Autowired
-    private PersonRepository personRepository;
-
+    private SubscriptionRepository subscriptionRepository;
     @Autowired
     private CompanyRepository companyRepository;
-
     @Autowired
-    private SubscriptionRepository subsRepository;
-
+    private PersonRepository personRepository;
     @Autowired
     TestEntityManager entityManager;
 
-    private Person person;
     private Company company;
+    private Person person;
     private Subscription subscription;
+    private PersonCompanyId subscriptionId;
 
-    void setup() {
-        person = new Person();
-        person.setUsername("Gadiel Velarde");
-        person.setPassword("123456");
-        person.setCreated(LocalDateTime.of(2020,1,1,1,1));
-        person.setLastUpdated(LocalDateTime.of(2020,1,1,1,1));
-        person.setEmail("a@utec.edu.pe");
-        entityManager.persist(person);
-
+    @BeforeEach
+    void setUp() {
         company = new Company();
-        company.setUsername("Compania");
-        company.setEmail("compania@gmail.com");
-        company.setPassword("123454");
-        company.setRuc("123456");
-        company.setCreated(LocalDateTime.now());
-        company.setLastUpdated(LocalDateTime.now());
+        company.setName("UTEC");
+        company.setRuc("12345678");
+        company.setEmail("utec@gmail.com");
+        company.setPassword("12345678");
+        company.setCreated(LocalDateTime.of(2020, 1, 1, 1, 1));
+        company.setLastUpdated(LocalDateTime.of(2020, 1, 1, 1, 1));
+        company.setRole(Role.COMPANY);
         entityManager.persist(company);
 
+        person = new Person();
+        person.setCreated(LocalDateTime.of(2020, 1, 1, 1, 1));
+        person.setLastUpdated(LocalDateTime.of(2020, 1, 1, 1, 1));
+        person.setEmail("joaquin@gmail.com");
+        person.setPassword("12345678");
+        person.setName("Joaquin");
+        person.setRole(Role.PERSON);
+        entityManager.persist(person);
+
+        subscriptionId = new PersonCompanyId(person.getId(), company.getId());
+
         subscription = new Subscription();
-        subscription.setSubscriptionDate(LocalDateTime.now());
+        subscription.setPerson(person);
+        subscription.setCompany(company);
+        subscription.setSubscriptionDate(LocalDateTime.of(2020, 1, 1, 1, 1));
         subscription.setStatus(Status.ACTIVE);
         subscription.setReceiveNotifs(true);
-        subscription.setCompany(company);
-        subscription.setPerson(person);
+        subscription.setId(subscriptionId);
+        entityManager.persist(subscription);
 
+        entityManager.flush();
     }
 
     @Test
-    void testCreationAndCustomId() {
-        setup();
-        subscription.setId(new PersonCompanyId(company.getId(), person.getId()));
-        entityManager.persist(subscription);
-        entityManager.flush();
+    void testCreation() {
+        Optional<Subscription> foundSubscription = subscriptionRepository.findById(subscriptionId);
+        assertTrue(foundSubscription.isPresent());
+        assertEquals(company, foundSubscription.get().getCompany());
+        assertEquals(person, foundSubscription.get().getPerson());
+        assertEquals(LocalDateTime.of(2020,1,1,1,1), foundSubscription.get().getSubscriptionDate());
+        assertEquals(Status.ACTIVE, foundSubscription.get().getStatus());
+        assertTrue(foundSubscription.get().getReceiveNotifs());
+        assertEquals(subscriptionId, foundSubscription.get().getId());
+    }
 
-        Optional<Subscription> retrievedSubscription = subsRepository.findById(subscription.getId());
-        assertEquals(subscription, retrievedSubscription.get());
+    @Test
+    void testStatus() {
+        Optional<Subscription> foundSubscription = subscriptionRepository.findById(subscriptionId);
+        assertTrue(foundSubscription.isPresent());
+        foundSubscription.get().setStatus(Status.CANCELLED);
+        entityManager.persist(foundSubscription.get());
+        entityManager.flush();
+        assertEquals(Status.CANCELLED, foundSubscription.get().getStatus());
+    }
+
+    @Test
+    void DeleteByIdAndKeepPersonAndCompany() {
+        subscriptionRepository.deleteById(subscriptionId);
+        entityManager.flush();
+        Optional<Subscription> foundSubscription = subscriptionRepository.findById(subscriptionId);
+        assertTrue(foundSubscription.isEmpty());
+        Optional<Company> foundCompany = companyRepository.findById(company.getId());
+        assertTrue(foundCompany.isPresent());
+        Optional<Person> foundPerson = personRepository.findById(person.getId());
+        assertTrue(foundPerson.isPresent());
     }
 }

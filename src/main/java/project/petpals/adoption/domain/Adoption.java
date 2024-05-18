@@ -4,34 +4,36 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import project.petpals.company.domain.Company;
 import project.petpals.person.domain.Person;
 import project.petpals.pet.domain.Pet;
 
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
 @Data
-@EqualsAndHashCode
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-
 public class Adoption {
+
     @EmbeddedId
-    private PetPersonId id;
+    PetPersonId id;
 
-    public Adoption() {}
+    @Column(name = "description")
+    private String description;
 
-        @Column(name = "description")
-        private String description;
+    @Column(name = "adoption_date")
+    private LocalDateTime adoptionDate;
 
-        @Column(name = "adoption_date")
-        private LocalDateTime adoptionDate;
+    @MapsId("personId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Person person;
 
-        @MapsId("personId")
-        @ManyToOne(fetch = FetchType.LAZY)
-        private Person person;
+    @MapsId("petId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Pet pet;
 
-        @MapsId("petId")
-        @ManyToOne(fetch = FetchType.LAZY)
-        private Pet pet;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Company company;
 }

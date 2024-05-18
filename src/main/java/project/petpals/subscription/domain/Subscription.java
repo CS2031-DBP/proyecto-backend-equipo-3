@@ -1,23 +1,16 @@
 package project.petpals.subscription.domain;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import project.petpals.company.domain.Company;
 import project.petpals.person.domain.Person;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Data
-@EqualsAndHashCode
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-// property default "@id" dice
 public class Subscription {
 
     @EmbeddedId
@@ -27,7 +20,7 @@ public class Subscription {
     private LocalDateTime subscriptionDate;
 
     @Column(name = "receive_notifs", nullable = false)
-    private boolean receiveNotifs;
+    private Boolean receiveNotifs;
 
     @Column(name = "status", nullable = false)
     private Status status;
@@ -40,3 +33,5 @@ public class Subscription {
     @MapsId("personId")
     private Person person;
 }
+
+

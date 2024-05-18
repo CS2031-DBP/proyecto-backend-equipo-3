@@ -1,14 +1,22 @@
 package project.petpals.activity.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import project.petpals.company.domain.Company;
+import project.petpals.location.domain.Location;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-@Data
 @Entity
+@Data
+@NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Activity {
 
     @Id
@@ -17,9 +25,6 @@ public class Activity {
 
     @Column(name = "name", nullable = false)
     private String name;
-
-    @Column(name = "address", nullable = false)
-    private String address;
 
     @Column(name = "end_date", nullable = false)
     private LocalDateTime endDate;
@@ -33,7 +38,10 @@ public class Activity {
     @Column(name = "activity_type", nullable = false)
     private ActivityType activityType;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    List<Location> locations = new ArrayList<>();
 }

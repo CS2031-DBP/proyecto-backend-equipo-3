@@ -1,6 +1,15 @@
 package project.petpals.activity.infrastructure;
 
-import jakarta.persistence.EntityManager;
+
+import project.petpals.AbstractContainerBaseTest;
+import project.petpals.activity.domain.Activity;
+import project.petpals.activity.domain.ActivityStatus;
+import project.petpals.activity.domain.ActivityType;
+import project.petpals.company.domain.Company;
+import project.petpals.company.infrastructure.CompanyRepository;
+import project.petpals.location.domain.Location;
+import project.petpals.location.infrastructure.LocationRepository;
+import project.petpals.user.domain.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,112 +18,121 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import project.petpals.AbstractContainerBaseTest;
-import project.petpals.activity.domain.Activity;
-import project.petpals.activity.domain.ActivityStatus;
-import project.petpals.activity.domain.ActivityType;
-import project.petpals.company.domain.Company;
-import project.petpals.company.infrastructure.CompanyRepository;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ActivityRepositoryTest extends AbstractContainerBaseTest {
 
     @Autowired
-    CompanyRepository companyRepository;
-
+    private CompanyRepository companyRepository;
     @Autowired
-    ActivityRepository activityRepository;
-
+    private ActivityRepository activityRepository;
+    @Autowired
+    private LocationRepository locationRepository;
     @Autowired
     TestEntityManager entityManager;
 
+    private Location location;
     private Company company;
     private Activity activity;
-
     @BeforeEach
-    void setup() {
+    void setUp() {
+        location = new Location();
+        location.setAddress("Jr Medrano Silva");
+        location.setLatitude(-40.5);
+        location.setLongitude(12.34);
+        entityManager.persist(location);
+
         company = new Company();
-        company.setUsername("Gatitos Felices");
-        company.setEmail("gatitosfelices@gmail.com");
-        company.setPassword("123456");
-        company.setRuc("123456");
-        company.setCreated(LocalDateTime.now());
-        company.setLastUpdated(LocalDateTime.now());
+        company.setName("UTEC");
+        company.setRuc("12345678");
+        company.setEmail("utec@gmail.com");
+        company.setPassword("12345678");
+        company.setCreated(LocalDateTime.of(2020,1,1,1,1));
+        company.setLastUpdated(LocalDateTime.of(2020,1,1,1,1));
+        company.setRole(Role.COMPANY);
+        company.getLocations().add(location);
         entityManager.persist(company);
 
         activity = new Activity();
+        activity.setActivityStatus(ActivityStatus.IN_PROGRESS);
         activity.setActivityType(ActivityType.WORKSHOP);
-        activity.setActivityStatus(ActivityStatus.NOT_STARTED);
+        activity.setName("Ciencia de Gatos");
         activity.setCompany(company);
-        activity.setName("Ciencia de gatos");
-        activity.setStartDate(LocalDateTime.now());
-        activity.setEndDate(activity.getStartDate().plusDays(20));
-        activity.setAddress("Jr. Medrano Silva");
+        activity.getLocations().add(location);
+        activity.setStartDate(LocalDateTime.of(2020,1,1,1,1));
+        activity.setEndDate(LocalDateTime.of(2020,1,1,1,1));
         entityManager.persist(activity);
 
         entityManager.flush();
     }
 
     @Test
-    void testCreate() {
-        Optional<Activity> retrievedActivity = activityRepository.findById(activity.getId());
-        assertEquals(retrievedActivity.get(),activity);
+    void testCreation() {
+        Activity foundActivity = activityRepository.findById(this.activity.getId()).orElse(null);
+        assertNotNull(foundActivity);
+
+        assertEquals(ActivityStatus.IN_PROGRESS, foundActivity.getActivityStatus());
+        assertEquals(ActivityType.WORKSHOP, foundActivity.getActivityType());
+        assertEquals("Ciencia de Gatos", foundActivity.getName());
+        assertEquals(company, foundActivity.getCompany());
+        assertEquals(location, foundActivity.getLocations().get(0));
+        assertEquals(LocalDateTime.of(2020,1,1,1,1), foundActivity.getStartDate());
+        assertEquals(LocalDateTime.of(2020,1,1,1,1), foundActivity.getEndDate());
     }
 
     @Test
-    void testFindAllByType() {
+    void testLocationsAreEqual() {
+        Activity foundActivity = activityRepository.findById(this.activity.getId()).orElse(null);
+        assertNotNull(foundActivity);
 
-        Pageable page = PageRequest.of(0,5);
-        Page<Activity> res = activityRepository.findAllByActivityType(ActivityType.WORKSHOP, page);
-
-        assertEquals(res.getTotalElements(),1);
-        assertEquals(res.stream().findFirst().get(), activity);
-        assertEquals(res.stream().findFirst().get().getCompany(), company);
+        assertEquals(1, foundActivity.getLocations().size());
+        assertEquals(location, foundActivity.getLocations().get(0));
+        assertEquals(foundActivity.getLocations().get(0), foundActivity.getCompany().getLocations().get(0));
     }
 
     @Test
-    void testFindByStartDate() {
-
-        Pageable page = PageRequest.of(0,5);
-        Page<Activity> res = activityRepository.findAllByStartDateGreaterThan(LocalDateTime.of(2020,1,1,1,1), page);
-        assertEquals(1,res.getTotalElements());
-        assertEquals(activity, res.stream().findFirst().get());
-
+    void testFindAllByActivityStatus() {
+        Page<Activity> foundActivities = activityRepository.findAllByActivityStatus(ActivityStatus.IN_PROGRESS, PageRequest.of(0,5));
+        assertNotNull(foundActivities);
+        assertEquals(activity, foundActivities.getContent().get(0));
     }
 
     @Test
-    void testFindByStartDateAndReturnEmpty() {
-
-        Pageable page = PageRequest.of(0,5);
-        Page<Activity> res = activityRepository.findAllByStartDateGreaterThan(LocalDateTime.of(2025,1,1,1,1), page);
-        assertTrue(res.isEmpty());
-
+    void testFindAllByActivityType() {
+        Page<Activity> foundActivities = activityRepository.findAllByActivityType(ActivityType.WORKSHOP, PageRequest.of(0,5));
+        assertNotNull(foundActivities);
+        assertEquals(activity, foundActivities.getContent().get(0));
     }
 
     @Test
-    void testFindByStatus() {
-        Pageable page = PageRequest.of(0,5);
-        Page<Activity> res = activityRepository.findAllByActivityStatus(ActivityStatus.NOT_STARTED, page);
-        assertEquals(1,res.getTotalElements());
-        assertEquals(activity, res.stream().findFirst().get());
+    void testFindAllByStartDateGreaterThan() {
+        LocalDateTime date1 = LocalDateTime.of(2019,11,1,1,0);
+        LocalDateTime date2 = LocalDateTime.of(2024,1,1,1,1);
+        Page<Activity> activities1 = activityRepository.findAllByStartDateGreaterThan(date1, PageRequest.of(0,5));
+        Page<Activity> activities2 = activityRepository.findAllByStartDateGreaterThan(date2, PageRequest.of(0,5));
+
+        assertEquals(1, activities1.getContent().size());
+        assertEquals(0, activities2.getContent().size());
     }
 
+    @Test
+    void testDeleteActivityByIdAndKeepCompanyAndLocation() {
+        activityRepository.deleteById(this.activity.getId());
+        entityManager.flush();
+        entityManager.clear();
 
-
-
+        Activity foundActivity = activityRepository.findById(this.activity.getId()).orElse(null);
+        assertNull(foundActivity);
+        Company foundCompany = companyRepository.findById(this.company.getId()).orElse(null);
+        assertNotNull(foundCompany);
+        Location foundLocation = locationRepository.findById(this.location.getId()).orElse(null);
+        assertNotNull(foundLocation);
+    }
 }
-
-/* WHAT SHOULD THE REPOSITORY DO?
- * - Create an activity and save all of its attributes
- * - Find all by type
- * - Find all by Date greater than
- * - Find all activities in progress
- * */

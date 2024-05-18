@@ -1,31 +1,35 @@
 package project.petpals.person.domain;
 
+import project.petpals.user.domain.Role;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import project.petpals.AbstractContainerBaseTest;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class PersonTest extends AbstractContainerBaseTest {
+public class PersonTest {
 
-    @Test
-    void testPersonCreation() {
-        Person person = new Person();
-        person.setUsername("Gadiel Velarde");
-        person.setPassword("123456");
+    private Person person;
+
+    @BeforeEach
+    void setup() {
+        person = new Person();
         person.setCreated(LocalDateTime.of(2020,1,1,1,1));
         person.setLastUpdated(LocalDateTime.of(2020,1,1,1,1));
-        person.setEmail("a@utec.edu.pe");
+        person.setEmail("joaquin@gmail.com");
+        person.setPassword("12345678");
+        person.setName("Joaquin");
+        person.setRole(Role.PERSON);
+    }
 
-        assertEquals("Gadiel Velarde", person.getUsername());
-        assertEquals("123456", person.getPassword());
+    @Test
+    void testCreation() {
         assertEquals(LocalDateTime.of(2020,1,1,1,1), person.getCreated());
         assertEquals(LocalDateTime.of(2020,1,1,1,1), person.getLastUpdated());
-        assertEquals("a@utec.edu.pe", person.getEmail());
+        assertEquals("Joaquin", person.getName());
+        assertEquals("joaquin@gmail.com", person.getEmail());
+        assertEquals("12345678", person.getPassword());
+        assertEquals(Role.PERSON, person.getRole());
     }
 }

@@ -1,53 +1,74 @@
 package project.petpals.subscription.domain;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import project.petpals.company.domain.Company;
 import project.petpals.person.domain.Person;
+import project.petpals.user.domain.Role;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SubscriptionTest {
 
-    private Person person;
     private Subscription subscription;
     private Company company;
+    private Person person;
+    private PersonCompanyId subscriptionId;
 
     @BeforeEach
     void setUp() {
+        company = new Company();
+        company.setId(1L);
+        company.setName("UTEC");
+        company.setRuc("12345678");
+        company.setEmail("utec@gmail.com");
+        company.setPassword("12345678");
+        company.setCreated(LocalDateTime.of(2020, 1, 1, 1, 1));
+        company.setLastUpdated(LocalDateTime.of(2020, 1, 1, 1, 1));
+        company.setRole(Role.COMPANY);
+
         person = new Person();
-        person.setUsername("Pan Cito");
-        person.setPassword("123456");
+        person.setId(2L);
         person.setCreated(LocalDateTime.of(2020,1,1,1,1));
         person.setLastUpdated(LocalDateTime.of(2020,1,1,1,1));
-        person.setEmail("pan.cito@utec.edu.pe");
+        person.setEmail("joaquin@gmail.com");
+        person.setPassword("12345678");
+        person.setName("Joaquin");
+        person.setRole(Role.PERSON);
 
-        company = new Company();
-        company.setUsername("UTEC");
-        company.setEmail("utec@gmail.com");
-        company.setPassword("123456");
-        company.setRuc("kdajhflaksdj");
-        company.setCreated(LocalDateTime.of(2020,1,1,3,3));
-        company.setLastUpdated(LocalDateTime.of(2020,1,1,3,3));
+        subscriptionId = new PersonCompanyId(person.getId(), company.getId());
 
         subscription = new Subscription();
+        subscription.setId(subscriptionId);
         subscription.setCompany(company);
         subscription.setPerson(person);
-        subscription.setSubscriptionDate(LocalDateTime.of(2020,1,1,2,2));
+        subscription.setReceiveNotifs(true);
         subscription.setStatus(Status.ACTIVE);
-        subscription.setReceiveNotifs(false);
+        subscription.setSubscriptionDate(LocalDateTime.of(2020, 1, 1, 1, 1));
+    }
+
+    @Test
+    void testCreation() {
+        assertEquals(company, subscription.getCompany());
+        assertEquals(person, subscription.getPerson());
+        assertTrue(subscription.getReceiveNotifs());
+        assertEquals(Status.ACTIVE, subscription.getStatus());
+        assertEquals(LocalDateTime.of(2020, 1, 1, 1, 1), subscription.getSubscriptionDate());
+        assertEquals(subscriptionId, subscription.getId());
 
     }
 
     @Test
-    void testSubscription() {
-        assertEquals(company, subscription.getCompany());
-        assertEquals(person, subscription.getPerson());
-        assertEquals(LocalDateTime.of(2020,1,1,2,2), subscription.getSubscriptionDate());
-        assertEquals(Status.ACTIVE, subscription.getStatus());
-        assertFalse(subscription.isReceiveNotifs());
+    void testGetCompany() {
+        assertEquals("UTEC", subscription.getCompany().getName());
     }
+
+    @Test
+    void testGetPerson() {
+        assertEquals("Joaquin", subscription.getPerson().getName());
+    }
+
 }

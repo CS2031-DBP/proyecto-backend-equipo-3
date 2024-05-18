@@ -1,16 +1,19 @@
 package project.petpals.pet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import project.petpals.company.domain.Company;
 
 import java.time.LocalDateTime;
 
+@Entity
 @Data
 @NoArgsConstructor
-@Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Pet {
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -36,10 +39,7 @@ public class Pet {
     @Column(name = "species", nullable = false)
     private Species species;
 
-
-
-
-
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Company company;
 
 }

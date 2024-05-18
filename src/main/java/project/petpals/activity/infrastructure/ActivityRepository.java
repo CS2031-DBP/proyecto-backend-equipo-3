@@ -1,18 +1,18 @@
 package project.petpals.activity.infrastructure;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import project.petpals.activity.domain.Activity;
 import project.petpals.activity.domain.ActivityStatus;
 import project.petpals.activity.domain.ActivityType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
 
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
+    Page<Activity> findAllByCompanyId(Long companyId, Pageable pageable);
+    Page<Activity> findAllByActivityStatus(ActivityStatus activityStatus, Pageable pageable);
     Page<Activity> findAllByActivityType(ActivityType activityType, Pageable pageable);
-    Page<Activity> findAllByStartDateGreaterThan(LocalDateTime localDateTime, Pageable page);
+    Page<Activity> findAllByStartDateGreaterThan(LocalDateTime startDate, Pageable pageable);
 
-    // Para hallar las actividades IN PROGRESS
-    Page<Activity> findAllByActivityStatus(ActivityStatus activityStatus, Pageable page);
 }

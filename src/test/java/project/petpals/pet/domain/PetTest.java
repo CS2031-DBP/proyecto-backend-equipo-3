@@ -1,32 +1,64 @@
 package project.petpals.pet.domain;
 
-import java.time.LocalDateTime;
-
+import project.petpals.company.domain.Company;
+import project.petpals.location.domain.Location;
+import project.petpals.user.domain.Role;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PetTest {
 
+    private Pet pet;
+    private Company company;
+    private Location location;
 
-    @Test
-    void testPetCreation() {
-        Pet pet = new Pet();
-        pet.setSex("female");
-        pet.setPetStatus(PetStatus.ADOPTED);
-        pet.setName("Lola");
-        pet.setBreed("poodle");
-        pet.setBirthDate(LocalDateTime.of(2020, 1, 1, 0, 0));
+    @BeforeEach
+    void setUp() {
+        location = new Location();
+        location.setAddress("Jr Medrano Silva");
+        location.setLatitude(-40.5);
+        location.setLongitude(12.34);
+
+        company = new Company();
+        company.setName("UTEC");
+        company.setRuc("12345678");
+        company.setEmail("utec@gmail.com");
+        company.setPassword("12345678");
+        company.setCreated(LocalDateTime.of(2020,1,1,1,1));
+        company.setLastUpdated(LocalDateTime.of(2020,1,1,1,1));
+        company.setRole(Role.COMPANY);
+        company.getLocations().add(location);
+
+        pet = new Pet();
+        pet.setPetStatus(PetStatus.IN_ADOPTION);
+        pet.setName("Firulais");
+        pet.setBreed("German shepherd");
+        pet.setCompany(company);
+        pet.setBirthDate(LocalDateTime.of(2020,1,1,1,1));
+        pet.setSex("male");
+        pet.setWeight(34.2);
         pet.setSpecies(Species.DOG);
-        pet.setWeight(4.3);
-
-        assertEquals("female", pet.getSex());
-        assertEquals(PetStatus.ADOPTED, pet.getPetStatus());
-        assertEquals("Lola", pet.getName());
-        assertEquals("poodle", pet.getBreed());
-        assertEquals(LocalDateTime.of(2020,1,1,0,0), pet.getBirthDate());
-        assertEquals(Species.DOG, pet.getSpecies());
-        assertEquals(4.3, pet.getWeight());
     }
 
+    @Test
+    void testCreation() {
+        assertEquals("Firulais", pet.getName());
+        assertEquals("German shepherd", pet.getBreed());
+        assertEquals(company, pet.getCompany());
+        assertEquals("male", pet.getSex());
+        assertEquals(34.2, pet.getWeight());
+        assertEquals(LocalDateTime.of(2020,1,1,1,1), pet.getBirthDate());
+        assertEquals(Species.DOG, pet.getSpecies());
+        assertEquals(PetStatus.IN_ADOPTION, pet.getPetStatus());
+    }
+
+    @Test
+    void testCompany() {
+        assertEquals("utec@gmail.com", pet.getCompany().getEmail());
+        assertEquals(location, pet.getCompany().getLocations().get(0));
+    }
 }
