@@ -21,17 +21,17 @@ public class Adoption {
 
     public Adoption() {}
 
-    @Column(name = "description")
-    private String description;
+        @Column(name = "description")
+        private String description;
 
-    @Column(name = "adoption_date")
-    private LocalDateTime adoptionDate;
+        @Column(name = "adoption_date")
+        private LocalDateTime adoptionDate;
 
-    @MapsId("personId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Person person;
+        @MapsId("personId")
+        @ManyToOne(fetch = FetchType.LAZY)
+        private Person person;
 
-    @MapsId("petId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Pet pet;
+        @MapsId("petId")
+        @ManyToOne(fetch = FetchType.LAZY)
+        private Pet pet;
 }
