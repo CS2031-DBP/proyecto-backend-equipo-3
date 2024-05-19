@@ -44,8 +44,14 @@ public class SubscriptionService {
         subscription.setReceiveNotifs(newSubscriptionDto.getReceiveNotifs());
     }
 
-    public Page<Subscription> getSubscriptionByCompany(Long companyId, int page, int size) {
-        return subscriptionRepository.findAllByCompanyId(companyId, PageRequest.of(page, size));
+    public Page<Subscription> getSubscriptionByCompany(int page, int size) {
+        // get user from current security context
+        String email = "email";
+
+        Company company = companyRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException("Company not found"));
+
+        return subscriptionRepository.findAllByCompanyId(company.getId(), PageRequest.of(page, size));
     }
 
     public List<Subscription> getSubscriptionByPerson() {
@@ -71,7 +77,8 @@ public class SubscriptionService {
             throw new IllegalArgumentException("You are not allowed to delete this subscription");
         }
 
-        subscriptionRepository.deleteById(subscriptionId);
+        subscription.setStatus(Status.CANCELLED);
+        subscriptionRepository.save(subscription);
 
     }
 }

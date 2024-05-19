@@ -29,4 +29,7 @@ public class NewPetDto {
     @NotNull
     @Positive
     private Long companyId;
+    @NotNull
+    @Size(min = 2, max = 255)
+    private String description;
 }

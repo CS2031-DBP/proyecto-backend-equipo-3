@@ -27,23 +27,23 @@ public class ActivityService {
     @Autowired
     private CompanyRepository companyRepository;
 
-    Page<Activity> getActivityByType(ActivityType type, int page, int size) {
+    public Page<Activity> getActivityByType(ActivityType type, int page, int size) {
         return activityRepository.findAllByActivityType(type, PageRequest.of(page, size));
     }
 
-    Page<Activity> getActivitiesByDate(LocalDateTime date, int page, int size) {
+    public Page<Activity> getActivitiesByDate(LocalDateTime date, int page, int size) {
         return activityRepository.findAllByStartDateGreaterThan(date, PageRequest.of(page, size));
     }
 
-    Page<Activity> getActivitiesByCompany(Long companyId, int page, int size) {
+    public Page<Activity> getActivitiesByCompany(Long companyId, int page, int size) {
         return activityRepository.findAllByCompanyId(companyId, PageRequest.of(page, size));
     }
 
-    Page<Activity> getActivitiesByStatus(ActivityStatus status, int page, int size) {
+    public Page<Activity> getActivitiesByStatus(ActivityStatus status, int page, int size) {
         return activityRepository.findAllByActivityStatus(status, PageRequest.of(page, size));
     }
 
-    void saveActivity(NewActivityDto newActivityDto) {
+    public void saveActivity(NewActivityDto newActivityDto) {
         // find Company from security context
         String email = "email";
 
@@ -65,7 +65,7 @@ public class ActivityService {
         // ADD  LOCATION TO ACTIVITY DTO??
     }
 
-    void deleteActivity(Long id) throws AccessDeniedException {
+    public void deleteActivity(Long id) throws AccessDeniedException {
         // find Company from security context
         String email = "email";
 

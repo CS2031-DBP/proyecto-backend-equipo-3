@@ -1,52 +1,75 @@
 package project.petpals.pet.application;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import project.petpals.pet.domain.Pet;
+import project.petpals.pet.domain.PetService;
+import project.petpals.pet.domain.Species;
+import project.petpals.pet.dtos.NewPetDto;
+import project.petpals.pet.dtos.PetDto;
+import project.petpals.pet.dtos.UpdatePetDto;
 
+import java.nio.file.AccessDeniedException;
+
+@RestController
+@RequestMapping("/pets")
 public class PetController {
-    //Pet @requestMapping("/pet")
-
     @Autowired
-    private int petNo;
+    private PetService petService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pet> getPet(@PathVariable Long id) {
+    public ResponseEntity<PetDto> getPet(@PathVariable Long id) {
         return ResponseEntity.ok(petService.getPet(id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updatePet(@PathVariable Long id, @RequestBody Pet pet) {
-        petService.updatePet(id, pet);
-        return ResponseEntity.ok().build();
+    @GetMapping("/breed/{breed}")
+    public ResponseEntity<Page<PetDto>> findAllByBreed(
+            @PathVariable String breed,
+            @RequestParam int page,
+            @RequestParam int size
+    ) {
+        return ResponseEntity.ok(petService.findAllByBreed(breed, page, size));
     }
 
-    @PatchMapping("/{id}/location")
-    public ResponseEntity<Void> updatePetLocation(
-            @PathVariable Long id,
-            @RequestParam("latitude") Double latitude,
-            @RequestParam("longitude") Double longitude
+    @GetMapping("/company/{companyId}")
+    public ResponseEntity<Page<PetDto>> findAllByBreed(
+            @PathVariable Long companyId,
+            @RequestParam int page,
+            @RequestParam int size
     ) {
-        petService.updatePetLocation(id, latitude, longitude);
+        return ResponseEntity.ok(petService.findAllInAdoptionByCompany(companyId, page, size));
+    }
+
+    @GetMapping("/inAdoption")
+    public ResponseEntity<Page<PetDto>> findAllByStatus(
+            @RequestParam int page,
+            @RequestParam int size
+    ) {
+        return ResponseEntity.ok(petService.findAllInAdoption(page, size));
+    }
+
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updatePet(@PathVariable Long id, @RequestBody UpdatePetDto updatePetDto) {
+        petService.ownerUpdatePet(id, updatePetDto);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePet(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePet(@PathVariable Long id) throws AccessDeniedException {
         petService.deletePet(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{species}")
-    public ResponseEntity<Pet> getPetBySpecies(@PathVariable String species) {
-        return ResponseEntity.ok(petService.getPetBySpecies(species));
+    @GetMapping("/species/{species}")
+    public ResponseEntity<Page<PetDto>> getPetBySpecies(@PathVariable Species species, @RequestParam int page, @RequestParam int size) {
+        return ResponseEntity.ok(petService.getPetBySpecies(species, page, size));
     }
 
     @PostMapping()
-    public ResponseEntity<Void> savePet(@RequestBody Pet pet) {
-        petService.savePet(pet);
+    public ResponseEntity<Void> savePet(@RequestBody NewPetDto newPetDto) {
+        petService.savePet(newPetDto);
         return ResponseEntity.created(null).build();
     }
-
 }

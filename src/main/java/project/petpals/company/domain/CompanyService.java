@@ -27,7 +27,7 @@ public class CompanyService {
     @Autowired
     private LocationService locationService;
 
-    public CompanySelfResponseDto CompanySelfResponseDto() {
+    public CompanySelfResponseDto getSelfCompany() {
         // get current user email
         String email = "email";
 
