@@ -1,12 +1,13 @@
 package project.petpals.subscription.dtos;
 
 import jakarta.validation.constraints.NotNull;
-import project.petpals.company.dtos.CompanyDto;
+import lombok.Data;
 import project.petpals.person.dtos.PersonDto;
 
+@Data
 public class NewSubscriptionDto {
     @NotNull
-    private CompanyDto company;
+    Long companyId;
     @NotNull
     private PersonDto person;
     @NotNull

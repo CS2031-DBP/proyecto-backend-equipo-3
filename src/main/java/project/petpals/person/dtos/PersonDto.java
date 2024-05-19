@@ -6,9 +6,9 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 
-
+@Data
 public class PersonDto {
     @NotNull
     @Size(min = 2, max = 50)
-    private String username;
+    private String name;
 }

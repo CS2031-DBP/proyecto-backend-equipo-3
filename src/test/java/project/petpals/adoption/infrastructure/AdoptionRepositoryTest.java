@@ -20,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import project.petpals.AbstractContainerBaseTest;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -74,7 +75,7 @@ public class AdoptionRepositoryTest extends AbstractContainerBaseTest {
         pet.setName("Firulais");
         pet.setBreed("German shepherd");
         pet.setCompany(company);
-        pet.setBirthDate(LocalDateTime.of(2020,1,1,1,1));
+        pet.setBirthDate(LocalDate.of(2020,1,1));
         pet.setSex("male");
         pet.setWeight(34.2);
         pet.setSpecies(Species.DOG);
