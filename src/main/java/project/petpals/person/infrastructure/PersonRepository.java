@@ -1,4 +1,7 @@
 package project.petpals.person.infrastructure;
 
-public interface PersonRepository {
+import project.petpals.person.domain.Person;
+import project.petpals.user.infrastructure.BaseUserRepository;
+
+public interface PersonRepository extends BaseUserRepository<Person> {
 }
