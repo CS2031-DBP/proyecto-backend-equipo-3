@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.petpals.exceptions.NotFoundException;
+import project.petpals.person.dtos.PersonDto;
 import project.petpals.person.dtos.PersonSelfResponseDto;
 import project.petpals.person.dtos.PersonSelfUpdateDto;
 import project.petpals.person.infrastructure.PersonRepository;

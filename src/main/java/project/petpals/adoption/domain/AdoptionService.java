@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import project.petpals.adoption.dtos.NewAdoptionDto;
 import project.petpals.adoption.infrastructure.AdoptionRepository;
 import project.petpals.company.domain.Company;
 import project.petpals.company.infrastructure.CompanyRepository;

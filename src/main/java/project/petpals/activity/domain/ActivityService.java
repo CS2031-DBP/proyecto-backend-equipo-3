@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.stereotype.Service;
+import project.petpals.activity.dtos.NewActivityDto;
 import project.petpals.activity.infrastructure.ActivityRepository;
 import project.petpals.company.domain.Company;
 import project.petpals.company.infrastructure.CompanyRepository;

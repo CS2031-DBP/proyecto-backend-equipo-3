@@ -6,7 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import project.petpals.company.domain.Company;
+import project.petpals.company.domain.CompanyService;
+import project.petpals.company.infrastructure.CompanyRepository;
 import project.petpals.exceptions.NotFoundException;
+import project.petpals.pet.dtos.NewPetDto;
+import project.petpals.pet.dtos.UpdatePetDto;
 import project.petpals.pet.infrastructure.PetRepository;
 
 import java.nio.file.AccessDeniedException;
@@ -20,6 +24,8 @@ public class PetService {
     private ModelMapper modelMapper;
     @Autowired
     private CompanyService companyService;
+    @Autowired
+    private CompanyRepository companyRepository;
 
 
     // rename to FindAllBySpecies
@@ -42,7 +48,9 @@ public class PetService {
 
     void savePet(NewPetDto newPetDto) {
         // get company from current context
-        Company company = companyService.findCompanyById(newPetDto.getCompanyId());
+        Company company = companyRepository.findById(newPetDto.getCompanyId()).orElseThrow(
+                ()->new NotFoundException("Company with id " + newPetDto.getCompanyId() + " not found")
+        );
         Pet newPet = modelMapper.map(newPetDto, Pet.class);
         newPet.setPetStatus(PetStatus.IN_ADOPTION);
     }
