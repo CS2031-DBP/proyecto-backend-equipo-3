@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,7 +57,7 @@ public class PetRepositoryTest extends AbstractContainerBaseTest {
         pet.setName("Firulais");
         pet.setBreed("German shepherd");
         pet.setCompany(company);
-        pet.setBirthDate(LocalDateTime.of(2020,1,1,1,1));
+        pet.setBirthDate(LocalDate.of(2020,1,1));
         pet.setSex("male");
         pet.setWeight(34.2);
         pet.setSpecies(Species.DOG);
@@ -73,7 +74,7 @@ public class PetRepositoryTest extends AbstractContainerBaseTest {
         assertEquals("Firulais", foundPet.getName());
         assertEquals("German shepherd", foundPet.getBreed());
         assertEquals(PetStatus.IN_ADOPTION, foundPet.getPetStatus());
-        assertEquals(LocalDateTime.of(2020, 1, 1, 1, 1), foundPet.getBirthDate());
+        assertEquals(LocalDate.of(2020,1,1), foundPet.getBirthDate());
         assertEquals("male", foundPet.getSex());
         assertEquals(34.2, foundPet.getWeight());
         assertEquals(Species.DOG, foundPet.getSpecies());
