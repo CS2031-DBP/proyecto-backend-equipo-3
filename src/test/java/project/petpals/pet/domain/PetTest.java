@@ -6,6 +6,7 @@ import project.petpals.user.domain.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,7 +39,7 @@ public class PetTest {
         pet.setName("Firulais");
         pet.setBreed("German shepherd");
         pet.setCompany(company);
-        pet.setBirthDate(LocalDateTime.of(2020,1,1,1,1));
+        pet.setBirthDate(LocalDate.of(2020,1,1));
         pet.setSex("male");
         pet.setWeight(34.2);
         pet.setDescription("A very good dog. Likes to play fetch.");
@@ -52,7 +53,7 @@ public class PetTest {
         assertEquals(company, pet.getCompany());
         assertEquals("male", pet.getSex());
         assertEquals(34.2, pet.getWeight());
-        assertEquals(LocalDateTime.of(2020,1,1,1,1), pet.getBirthDate());
+        assertEquals(LocalDate.of(2020,1,1), pet.getBirthDate());
         assertEquals(Species.DOG, pet.getSpecies());
         assertEquals(PetStatus.IN_ADOPTION, pet.getPetStatus());
     }
