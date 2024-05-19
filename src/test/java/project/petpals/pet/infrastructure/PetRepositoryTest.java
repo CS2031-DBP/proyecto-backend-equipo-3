@@ -60,6 +60,7 @@ public class PetRepositoryTest extends AbstractContainerBaseTest {
         pet.setBirthDate(LocalDate.of(2020,1,1));
         pet.setSex("male");
         pet.setWeight(34.2);
+        pet.setDescription("A very good dog. Likes to play fetch.");
         pet.setSpecies(Species.DOG);
         entityManager.persist(pet);
 
@@ -92,7 +93,7 @@ public class PetRepositoryTest extends AbstractContainerBaseTest {
     @Test
     void testFindAllByCompanyId() {
         Pageable page = PageRequest.of(0,5);
-        Page<Pet> petPage = petRepository.findAllByCompanyId(company.getId(), page);
+        Page<Pet> petPage = petRepository.findAllByCompanyIdAndPetStatus(company.getId(), PetStatus.IN_ADOPTION, page);
         assertEquals(1, petPage.getTotalElements());
         assertEquals(pet, petPage.getContent().get(0));
     }
@@ -101,8 +102,8 @@ public class PetRepositoryTest extends AbstractContainerBaseTest {
         Pageable page = PageRequest.of(0,5);
         Pageable page2 = PageRequest.of(0,5);
 
-        Page<Pet> catPage = petRepository.findAllBySpecies(Species.CAT, page2);
-        Page<Pet> dogPage = petRepository.findAllBySpecies(Species.DOG, page);
+        Page<Pet> catPage = petRepository.findAllBySpeciesAndPetStatus(Species.CAT, PetStatus.IN_ADOPTION, page2);
+        Page<Pet> dogPage = petRepository.findAllBySpeciesAndPetStatus(Species.DOG, PetStatus.IN_ADOPTION, page);
 
         assertEquals(1, dogPage.getTotalElements());
         assertEquals(pet, dogPage.getContent().get(0));
@@ -112,7 +113,7 @@ public class PetRepositoryTest extends AbstractContainerBaseTest {
     @Test
     void testFindAllByBreed() {
         Pageable page = PageRequest.of(0,5);
-        Page<Pet> dogPage = petRepository.findAllBySpecies(Species.DOG, page);
+        Page<Pet> dogPage = petRepository.findALlByBreedIgnoreCaseAndPetStatus("German Shepherd", PetStatus.IN_ADOPTION, page);
 
         assertEquals(1, dogPage.getTotalElements());
         assertEquals(pet, dogPage.getContent().get(0));
@@ -122,7 +123,7 @@ public class PetRepositoryTest extends AbstractContainerBaseTest {
     @Test
     void testFindAllByPetStatus() {
         Pageable page = PageRequest.of(0,5);
-        Page<Pet> dogPage = petRepository.findAllBySpecies(Species.DOG, page);
+        Page<Pet> dogPage = petRepository.findAllByPetStatus(PetStatus.IN_ADOPTION, page);
 
         assertEquals(1, dogPage.getTotalElements());
         assertEquals(pet, dogPage.getContent().get(0));
@@ -135,7 +136,7 @@ public class PetRepositoryTest extends AbstractContainerBaseTest {
         entityManager.clear();
         Company foundCompany = companyRepository.findById(company.getId()).orElse(null);
         assertNotNull(foundCompany);
-        assertEquals(0, petRepository.findAllByCompanyId(company.getId(), PageRequest.of(0,5)).getTotalElements());
+        assertEquals(0, petRepository.findAllByCompanyIdAndPetStatus(company.getId(), PetStatus.IN_ADOPTION, PageRequest.of(0,5)).getTotalElements());
     }
 
 }

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 import project.petpals.exceptions.ConflictException;
 import project.petpals.exceptions.NotFoundException;
 
+import java.nio.file.AccessDeniedException;
+
 
 @RestController
 public class GlobalExceptionHandler {
@@ -19,5 +21,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConflictException.class)
     public String handleConfict(ConflictException ex2){return ex2.getMessage();}
 
-
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public String handleAccessDenied(AccessDeniedException ex3){return ex3.getMessage();}
 }
