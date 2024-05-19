@@ -10,6 +10,7 @@ import project.petpals.company.infrastructure.CompanyRepository;
 import project.petpals.exceptions.NotFoundException;
 import project.petpals.person.domain.Person;
 import project.petpals.person.infrastructure.PersonRepository;
+import project.petpals.subscription.dtos.NewSubscriptionDto;
 import project.petpals.subscription.infrastructure.SubscriptionRepository;
 
 import java.time.LocalDateTime;
