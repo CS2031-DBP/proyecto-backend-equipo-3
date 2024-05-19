@@ -59,6 +59,7 @@ public class PetRepositoryTest extends AbstractContainerBaseTest {
         pet.setBirthDate(LocalDateTime.of(2020,1,1,1,1));
         pet.setSex("male");
         pet.setWeight(34.2);
+        pet.setDescription("A very good dog. Likes to play fetch.");
         pet.setSpecies(Species.DOG);
         entityManager.persist(pet);
 

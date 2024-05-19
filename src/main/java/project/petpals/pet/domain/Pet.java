@@ -39,6 +39,9 @@ public class Pet {
     @Column(name = "species", nullable = false)
     private Species species;
 
+    @Column(name = "description", nullable = false)
+    String description;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 

@@ -1,16 +1,25 @@
 package project.petpals.pet.domain;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import project.petpals.company.domain.Company;
+import project.petpals.exceptions.NotFoundException;
 import project.petpals.pet.infrastructure.PetRepository;
+
+import java.nio.file.AccessDeniedException;
 
 @Service
 public class PetService {
 
     @Autowired
     private PetRepository petRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+    @Autowired
+    private CompanyService companyService;
 
 
     // rename to FindAllBySpecies
@@ -31,7 +40,36 @@ public class PetService {
         return petRepository.findAllByPetStatus(status, PageRequest.of(page, size));
     }
 
-    void savePet(Pet newPetDto) {
+    void savePet(NewPetDto newPetDto) {
+        // get company from current context
+        Company company = companyService.findCompanyById(newPetDto.getCompanyId());
+        Pet newPet = modelMapper.map(newPetDto, Pet.class);
+        newPet.setPetStatus(PetStatus.IN_ADOPTION);
+    }
 
+    void deletePet(Long petId) throws AccessDeniedException {
+        Pet pet = petRepository.findById(petId).orElseThrow(
+                () -> new NotFoundException("Pet with id " + petId + " not found"));
+        Long companyId = pet.getCompany().getId();
+
+        // check if the pet is in adoption
+        // check if the company actually OWNS the pet
+        if (pet.getPetStatus() != PetStatus.IN_ADOPTION) {
+            throw new AccessDeniedException("Cannot perform delete pet operation.");
+        }
+
+        petRepository.deleteById(petId);
+
+    }
+
+    void ownerUpdatePet(Long petId, UpdatePetDto updatePetDto) {
+
+        // Change to get Person from current context
+        Pet pet = petRepository.findById(petId).orElseThrow(
+                () -> new NotFoundException("Pet with id " + petId + " not found"));
+
+        pet.setWeight(updatePetDto.getWeight());
+        pet.setDescription(updatePetDto.getDescription());
+        petRepository.save(pet);
     }
 }
