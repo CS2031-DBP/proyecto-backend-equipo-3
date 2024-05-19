@@ -3,6 +3,7 @@ package project.petpals.pet.application;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import project.petpals.pet.domain.PetService;
 import project.petpals.pet.domain.Species;
@@ -41,6 +42,7 @@ public class PetController {
         return ResponseEntity.ok(petService.findAllInAdoptionByCompany(companyId, page, size));
     }
 
+    @PreAuthorize("hasRole('PERSON')")
     @GetMapping("/inAdoption")
     public ResponseEntity<Page<PetDto>> findAllByStatus(
             @RequestParam int page,

@@ -15,9 +15,4 @@ public class PetPalsApplication {
         System.out.println("Hello World!");
     }
 
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-
 }
