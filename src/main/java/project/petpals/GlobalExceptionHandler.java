@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import project.petpals.exceptions.ConflictException;
 import project.petpals.exceptions.NotFoundException;
+import project.petpals.exceptions.UnauthorizedAccessException;
 
 import java.nio.file.AccessDeniedException;
 
@@ -24,4 +25,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(AccessDeniedException.class)
     public String handleAccessDenied(AccessDeniedException ex3){return ex3.getMessage();}
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public String handleUnauthorizedAccessException(UnauthorizedAccessException ex3){return ex3.getMessage();}
 }

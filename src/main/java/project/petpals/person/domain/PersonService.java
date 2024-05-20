@@ -3,6 +3,7 @@ package project.petpals.person.domain;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import project.petpals.auth.AuthUtils;
 import project.petpals.exceptions.NotFoundException;
 import project.petpals.person.dtos.PersonDto;
 import project.petpals.person.dtos.PersonSelfResponseDto;
@@ -18,10 +19,12 @@ public class PersonService {
     private PersonRepository personRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private AuthUtils authUtils;
 
     public PersonSelfResponseDto getSelf() {
         // find current user email
-        String email = "email";
+        String email = authUtils.getCurrentUserEmail();
 
         Person found =  personRepository.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("Person not found")
@@ -40,7 +43,7 @@ public class PersonService {
 
     public void updatePerson(PersonSelfUpdateDto personSelfUpdateDto) {
         // find current user email
-        String email = "email";
+        String email = authUtils.getCurrentUserEmail();
 
         Person found =  personRepository.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("Person not found")

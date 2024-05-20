@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import project.petpals.auth.AuthUtils;
 import project.petpals.company.dtos.CompanyDto;
 import project.petpals.company.dtos.CompanySelfResponseDto;
 import project.petpals.company.dtos.CompanySelfUpdateDto;
@@ -26,10 +27,12 @@ public class CompanyService {
     private ModelMapper modelMapper;
     @Autowired
     private LocationService locationService;
+    @Autowired
+    private AuthUtils authUtils;
 
     public CompanySelfResponseDto getSelfCompany() {
         // get current user email
-        String email = "email";
+        String email = authUtils.getCurrentUserEmail();
 
         Company company = companyRepository.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("Company with email " + email + " not found"));
@@ -51,7 +54,7 @@ public class CompanyService {
 
     public void updateCompany(CompanySelfUpdateDto companySelfUpdateDto) {
         // get current user email
-        String email = "email";
+        String email = authUtils.getCurrentUserEmail();
 
         Company company = companyRepository.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("Company with email " + email + " not found"));

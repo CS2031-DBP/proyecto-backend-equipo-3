@@ -6,10 +6,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import project.petpals.adoption.dtos.NewAdoptionDto;
 import project.petpals.adoption.infrastructure.AdoptionRepository;
+import project.petpals.auth.AuthUtils;
 import project.petpals.company.domain.Company;
 import project.petpals.company.infrastructure.CompanyRepository;
 import project.petpals.exceptions.ConflictException;
 import project.petpals.exceptions.NotFoundException;
+import project.petpals.exceptions.UnauthorizedAccessException;
 import project.petpals.person.domain.Person;
 import project.petpals.person.infrastructure.PersonRepository;
 import project.petpals.pet.domain.Pet;
@@ -28,10 +30,12 @@ public class AdoptionService {
     private PersonRepository personRepository;
     @Autowired
     private CompanyRepository companyRepository;
+    @Autowired
+    private AuthUtils authUtils;
 
     public void saveAdoption(NewAdoptionDto newAdoptionDto) {
         // get person from security context
-        String email = "email";
+        String email = authUtils.getCurrentUserEmail();
 
         Person person = personRepository.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("Person not found!"));
@@ -61,7 +65,7 @@ public class AdoptionService {
 
     public Page<Adoption> getAdoptionsByUser(int page, int size) {
         // get person from security context
-        String email = "email";
+        String email = authUtils.getCurrentUserEmail();
 
         Person person = personRepository.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("Person not found!"));
@@ -73,8 +77,9 @@ public class AdoptionService {
         Adoption found = adoptionRepository.findById(adoptionId).orElseThrow(
                 () -> new NotFoundException("Adoption not found!"));
 
-        // verify user in security context is the same as the person in the adoption
-        // it is not redundant bc we will have extra code here.
+        if (!authUtils.isResourceOwner(found.getPerson().getId())) {
+            throw new UnauthorizedAccessException("You have not adopted this pet.");
+        }
         return found;
     }
 }

@@ -21,10 +21,10 @@ public class UserService {
 
     public User findByEmail(String username, String role) {
         User user;
-        if (role.equals("ROLE_DRIVER"))
-            user = personRepository.findByEmail(username).orElseThrow(() -> new NotFoundException("User not found"));
+        if (role.equals("ROLE_PERSON"))
+            user = personRepository.findByEmail(username).orElseThrow(() -> new NotFoundException("User not found!"));
         else
-            user = companyRepository.findByEmail(username).orElseThrow(() -> new NotFoundException("User nottt found"));
+            user = companyRepository.findByEmail(username).orElseThrow(() -> new NotFoundException("User not found!"));
 
         return user;
     }
@@ -34,7 +34,7 @@ public class UserService {
         return username -> {
             User user = userRepository
                     .findByEmail(username)
-                    .orElseThrow(() -> new NotFoundException("User not found"));
+                    .orElseThrow(() -> new NotFoundException("User not found!"));
             return (UserDetails) user;
         };
     }

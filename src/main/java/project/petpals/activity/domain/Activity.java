@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import project.petpals.company.domain.Company;
 import project.petpals.location.domain.Location;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +28,10 @@ public class Activity {
     private String name;
 
     @Column(name = "end_date", nullable = false)
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Column(name = "start_date", nullable = false)
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column(name = "activity_status", nullable = false)
     private ActivityStatus activityStatus;
@@ -39,9 +40,9 @@ public class Activity {
     private ActivityType activityType;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Company company;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     List<Location> locations = new ArrayList<>();
 }

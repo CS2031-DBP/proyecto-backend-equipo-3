@@ -10,5 +10,5 @@ public class NewAdoptionDto {
     private Long PetId;
     @NotNull
     @Size(min = 1, max = 255)
-    private String Description;
+    private String description;
 }

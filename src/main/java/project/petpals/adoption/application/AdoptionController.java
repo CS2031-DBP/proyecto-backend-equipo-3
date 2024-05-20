@@ -17,8 +17,9 @@ public class AdoptionController {
     @Autowired
     private AdoptionService adoptionService;
 
-    @GetMapping("/{adoptionId}")
-    public ResponseEntity<Adoption> getAdoption(@PathVariable PetPersonId adoptionId) {
+    @GetMapping("/{petId}/{personId}")
+    public ResponseEntity<Adoption> getAdoption(@PathVariable Long petId, @PathVariable Long personId) {
+        PetPersonId adoptionId = new PetPersonId(petId, personId);
         return ResponseEntity.ok(adoptionService.getAdoption(adoptionId));
     }
 

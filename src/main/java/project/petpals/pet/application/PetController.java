@@ -19,11 +19,15 @@ public class PetController {
     @Autowired
     private PetService petService;
 
+    // only for the owner of the pet? or for the company that has the pet?
+    // could be public information
+    @PreAuthorize("hasRole('ROLE_COMPANY') or hasRole('ROLE_PERSON')")
     @GetMapping("/{id}")
     public ResponseEntity<PetDto> getPet(@PathVariable Long id) {
         return ResponseEntity.ok(petService.getPet(id));
     }
 
+    @PreAuthorize("hasRole('ROLE_COMPANY') or hasRole('ROLE_PERSON')")
     @GetMapping("/breed/{breed}")
     public ResponseEntity<Page<PetDto>> findAllByBreed(
             @PathVariable String breed,
@@ -33,6 +37,7 @@ public class PetController {
         return ResponseEntity.ok(petService.findAllByBreed(breed, page, size));
     }
 
+    @PreAuthorize("hasRole('ROLE_COMPANY') or hasRole('ROLE_PERSON')")
     @GetMapping("/company/{companyId}")
     public ResponseEntity<Page<PetDto>> findAllByBreed(
             @PathVariable Long companyId,
@@ -42,7 +47,7 @@ public class PetController {
         return ResponseEntity.ok(petService.findAllInAdoptionByCompany(companyId, page, size));
     }
 
-    @PreAuthorize("hasRole('PERSON')")
+    @PreAuthorize("hasRole('ROLE_COMPANY') or hasRole('ROLE_PERSON')")
     @GetMapping("/inAdoption")
     public ResponseEntity<Page<PetDto>> findAllByStatus(
             @RequestParam int page,
@@ -64,11 +69,13 @@ public class PetController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ROLE_COMPANY') or hasRole('ROLE_PERSON')")
     @GetMapping("/species/{species}")
     public ResponseEntity<Page<PetDto>> getPetBySpecies(@PathVariable Species species, @RequestParam int page, @RequestParam int size) {
         return ResponseEntity.ok(petService.getPetBySpecies(species, page, size));
     }
 
+    @PreAuthorize("hasRole('ROLE_COMPANY')")
     @PostMapping()
     public ResponseEntity<Void> savePet(@RequestBody NewPetDto newPetDto) {
         petService.savePet(newPetDto);

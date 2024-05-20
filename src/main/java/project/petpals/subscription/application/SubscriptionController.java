@@ -3,6 +3,7 @@ package project.petpals.subscription.application;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import project.petpals.subscription.domain.PersonCompanyId;
 import project.petpals.subscription.domain.Subscription;
@@ -18,12 +19,14 @@ public class SubscriptionController {
     @Autowired
     private SubscriptionService subscriptionService;
 
+    @PreAuthorize("hasRole('ROLE_PERSON')")
     @PostMapping()
     public ResponseEntity<Void> saveSubscription(@RequestBody NewSubscriptionDto newSubscriptionDto) {
         subscriptionService.saveSubscription(newSubscriptionDto);
         return ResponseEntity.created(null).build();
     }
 
+    @PreAuthorize("hasRole('ROLE_COMPANY')")
     @GetMapping("/company")
     public ResponseEntity<Page<Subscription>> getSubscriptionByCompany(
             @RequestParam int page,
@@ -31,11 +34,13 @@ public class SubscriptionController {
         return ResponseEntity.ok(subscriptionService.getSubscriptionByCompany(page, size));
     }
 
-    @GetMapping("/person/")
+    @PreAuthorize("hasRole('ROLE_PERSON')")
+    @GetMapping("/person")
     public ResponseEntity<List<Subscription>> getSubscriptionByPerson() {
         return ResponseEntity.ok(subscriptionService.getSubscriptionByPerson());
     }
 
+    @PreAuthorize("hasRole('ROLE_PERSON')")
     @DeleteMapping("/{subscriptionId}")
     public ResponseEntity<Void> deleteSubscription(@PathVariable PersonCompanyId subscriptionId) {
         subscriptionService.deleteSubscription(subscriptionId);

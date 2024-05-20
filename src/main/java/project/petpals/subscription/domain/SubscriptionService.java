@@ -5,9 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import project.petpals.adoption.domain.PetPersonId;
+import project.petpals.auth.AuthUtils;
 import project.petpals.company.domain.Company;
 import project.petpals.company.infrastructure.CompanyRepository;
 import project.petpals.exceptions.NotFoundException;
+import project.petpals.exceptions.UnauthorizedAccessException;
 import project.petpals.person.domain.Person;
 import project.petpals.person.infrastructure.PersonRepository;
 import project.petpals.subscription.dtos.NewSubscriptionDto;
@@ -22,12 +24,16 @@ public class SubscriptionService {
 
     @Autowired
     private SubscriptionRepository subscriptionRepository;
+    @Autowired
     private PersonRepository personRepository;
+    @Autowired
     private CompanyRepository companyRepository;
+    @Autowired
+    private AuthUtils authUtils;
 
     public void saveSubscription(NewSubscriptionDto newSubscriptionDto) {
         // get user from current security context
-        String email = "email";
+        String email = authUtils.getCurrentUserEmail();
 
         Person person = personRepository.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("Person not found"));
@@ -46,7 +52,7 @@ public class SubscriptionService {
 
     public Page<Subscription> getSubscriptionByCompany(int page, int size) {
         // get user from current security context
-        String email = "email";
+        String email = authUtils.getCurrentUserEmail();
 
         Company company = companyRepository.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("Company not found"));
@@ -57,7 +63,7 @@ public class SubscriptionService {
     public List<Subscription> getSubscriptionByPerson() {
 
         // get user from current security context
-        String email = "email";
+        String email = authUtils.getCurrentUserEmail();
 
         Person person = personRepository.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("Person not found"));
@@ -67,14 +73,11 @@ public class SubscriptionService {
 
     public void deleteSubscription(PersonCompanyId subscriptionId) {
         // get user from current security context
-        String email = "email";
 
-        Person person = personRepository.findByEmail(email).orElseThrow(
-                () -> new NotFoundException("Person not found"));
         Subscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow(
                 () -> new NotFoundException("Subscription not found"));
-        if (!Objects.equals(subscription.getPerson().getId(), person.getId())) {
-            throw new IllegalArgumentException("You are not allowed to delete this subscription");
+        if (!authUtils.isResourceOwner(subscription.getPerson().getId())) {
+            throw new UnauthorizedAccessException("You are not allowed to delete this subscription");
         }
 
         subscription.setStatus(Status.CANCELLED);
