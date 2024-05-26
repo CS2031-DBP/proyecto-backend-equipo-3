@@ -2,16 +2,16 @@ package project.petpals.adoption.domain;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import project.petpals.activity.dtos.ActivityResponseDto;
 import project.petpals.adoption.dtos.AdoptionResponseDto;
 import project.petpals.adoption.dtos.NewAdoptionDto;
+import project.petpals.adoption.event.AdoptionCreatedEvent;
 import project.petpals.adoption.infrastructure.AdoptionRepository;
 import project.petpals.auth.AuthUtils;
 import project.petpals.company.domain.Company;
-import project.petpals.company.dtos.CompanyDto;
 import project.petpals.company.infrastructure.CompanyRepository;
 import project.petpals.exceptions.ConflictException;
 import project.petpals.exceptions.NotFoundException;
@@ -41,6 +41,11 @@ public class AdoptionService {
     private AuthUtils authUtils;
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
+
 
     private AdoptionResponseDto convertToDTO(Adoption adoption) {
         AdoptionResponseDto res = modelMapper.map(adoption, AdoptionResponseDto.class);
@@ -85,6 +90,8 @@ public class AdoptionService {
         adoption.setAdoptionDate(LocalDate.now());
         adoption.setDescription(newAdoptionDto.getDescription());
         adoptionRepository.save(adoption);
+
+        eventPublisher.publishEvent(new AdoptionCreatedEvent(adoption));
     }
 
     public Page<AdoptionResponseDto> getAdoptionsByUser(int page, int size) {
@@ -107,4 +114,5 @@ public class AdoptionService {
         }
         return found;
     }
+
 }

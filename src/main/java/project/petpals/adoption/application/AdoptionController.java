@@ -12,6 +12,7 @@ import project.petpals.adoption.domain.AdoptionService;
 import project.petpals.adoption.domain.PetPersonId;
 import project.petpals.adoption.dtos.AdoptionResponseDto;
 import project.petpals.adoption.dtos.NewAdoptionDto;
+import project.petpals.adoption.infrastructure.EmailService;
 import project.petpals.company.dtos.CompanyDto;
 import project.petpals.pet.dtos.NewPetDto;
 
@@ -21,6 +22,7 @@ public class AdoptionController {
 
     @Autowired
     private AdoptionService adoptionService;
+
 
     @GetMapping("/{petId}/{personId}")
     public ResponseEntity<Adoption> getAdoption(@PathVariable Long petId, @PathVariable Long personId) {
@@ -39,4 +41,20 @@ public class AdoptionController {
         adoptionService.saveAdoption(petId, newAdoptionDto);
         return ResponseEntity.created(null).build();
     }
+
+    @Autowired
+    private EmailService emailService;
+
+    @GetMapping("/sendEmail")
+    public String sendTestEmail(@RequestParam String email) {
+        String subject = "Test Email";
+        String text = "This is a test email from PetPals.";
+        emailService.sendSimpleMessage(email, subject, text);
+        return "Email sent to " + email;
+    }
+
+
+
+
+
 }
