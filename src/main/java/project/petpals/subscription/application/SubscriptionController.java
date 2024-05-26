@@ -20,9 +20,10 @@ public class SubscriptionController {
     private SubscriptionService subscriptionService;
 
     @PreAuthorize("hasRole('ROLE_PERSON')")
-    @PostMapping()
-    public ResponseEntity<Void> saveSubscription(@RequestBody NewSubscriptionDto newSubscriptionDto) {
-        subscriptionService.saveSubscription(newSubscriptionDto);
+    @PostMapping("/{companyId}")
+    public ResponseEntity<Void> saveSubscription(
+            @PathVariable Long companyId, @RequestBody NewSubscriptionDto newSubscriptionDto) {
+        subscriptionService.saveSubscription(companyId, newSubscriptionDto);
         return ResponseEntity.created(null).build();
     }
 
@@ -41,9 +42,9 @@ public class SubscriptionController {
     }
 
     @PreAuthorize("hasRole('ROLE_PERSON')")
-    @DeleteMapping("/{subscriptionId}")
-    public ResponseEntity<Void> deleteSubscription(@PathVariable PersonCompanyId subscriptionId) {
-        subscriptionService.deleteSubscription(subscriptionId);
+    @DeleteMapping("/{companyId}")
+    public ResponseEntity<Void> deleteSubscription(@PathVariable Long companyId) {
+        subscriptionService.deleteSubscription(companyId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import project.petpals.exceptions.ConflictException;
 import project.petpals.exceptions.NotFoundException;
 import project.petpals.exceptions.UnauthorizedAccessException;
@@ -11,7 +12,7 @@ import project.petpals.exceptions.UnauthorizedAccessException;
 import java.nio.file.AccessDeniedException;
 
 
-@RestController
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

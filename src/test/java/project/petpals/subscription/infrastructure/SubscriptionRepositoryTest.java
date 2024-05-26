@@ -100,7 +100,7 @@ public class SubscriptionRepositoryTest extends AbstractContainerBaseTest {
     }
 
     @Test
-    void DeleteByIdAndKeepPersonAndCompany() {
+    void deleteByIdAndKeepPersonAndCompany() {
         subscriptionRepository.deleteById(subscriptionId);
         entityManager.flush();
         Optional<Subscription> foundSubscription = subscriptionRepository.findById(subscriptionId);
@@ -109,5 +109,11 @@ public class SubscriptionRepositoryTest extends AbstractContainerBaseTest {
         assertTrue(foundCompany.isPresent());
         Optional<Person> foundPerson = personRepository.findById(person.getId());
         assertTrue(foundPerson.isPresent());
+    }
+
+    @Test
+    void deleteAllTest() {
+        subscriptionRepository.deleteAll();
+        assertEquals(0, subscriptionRepository.count());
     }
 }

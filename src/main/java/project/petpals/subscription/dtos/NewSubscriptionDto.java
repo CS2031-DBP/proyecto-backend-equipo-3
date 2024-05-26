@@ -7,9 +7,5 @@ import project.petpals.person.dtos.PersonDto;
 @Data
 public class NewSubscriptionDto {
     @NotNull
-    Long companyId;
-    @NotNull
-    private PersonDto person;
-    @NotNull
     private Boolean receiveNotifs;
 }

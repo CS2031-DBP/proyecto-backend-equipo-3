@@ -1,0 +1,7 @@
+{
+  "name":"Perruanos",
+  "email":"perruanos@example.com",
+  "password":"123456789",
+  "isCompany":true,
+  "ruc":"123456789"
+}

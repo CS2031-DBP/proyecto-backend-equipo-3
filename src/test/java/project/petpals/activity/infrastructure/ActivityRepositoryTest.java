@@ -136,4 +136,11 @@ public class ActivityRepositoryTest extends AbstractContainerBaseTest {
         Location foundLocation = locationRepository.findById(this.location.getId()).orElse(null);
         assertNotNull(foundLocation);
     }
+
+    @Test
+    void findAllByCompanyId() {
+        Page<Activity> foundActivities = activityRepository.findAllByCompanyId(company.getId(), PageRequest.of(0,5));
+        assertNotNull(foundActivities);
+        assertEquals(activity, foundActivities.getContent().get(0));
+    }
 }

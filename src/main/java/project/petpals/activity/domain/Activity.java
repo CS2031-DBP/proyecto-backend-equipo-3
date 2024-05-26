@@ -40,7 +40,7 @@ public class Activity {
     private ActivityType activityType;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER) // cascade = persist
     private Company company;
 
     @ManyToMany(fetch = FetchType.EAGER)

@@ -4,10 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import project.petpals.activity.domain.Activity;
+import project.petpals.activity.dtos.ActivityResponseDto;
 import project.petpals.adoption.domain.Adoption;
 import project.petpals.adoption.domain.AdoptionService;
 import project.petpals.adoption.domain.PetPersonId;
+import project.petpals.adoption.dtos.AdoptionResponseDto;
 import project.petpals.adoption.dtos.NewAdoptionDto;
+import project.petpals.company.dtos.CompanyDto;
 import project.petpals.pet.dtos.NewPetDto;
 
 @RestController
@@ -23,8 +27,8 @@ public class AdoptionController {
         return ResponseEntity.ok(adoptionService.getAdoption(adoptionId));
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<Page<Adoption>> getAdoptionByUser(@RequestParam int page, @RequestParam int size) {
+    @GetMapping("/mine")
+    public ResponseEntity<Page<AdoptionResponseDto>> getAdoptionByUser(@RequestParam int page, @RequestParam int size) {
         return ResponseEntity.ok(adoptionService.getAdoptionsByUser(page, size));
     }
 

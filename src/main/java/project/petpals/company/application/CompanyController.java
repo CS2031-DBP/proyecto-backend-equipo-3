@@ -40,7 +40,7 @@ public class CompanyController {
 //        return ResponseEntity.ok(companyService.getCompanyByName(name));
 //    }
 
-    @PatchMapping("/{id}")
+    @PatchMapping()
     public ResponseEntity<Void> updateCompany(@RequestBody CompanySelfUpdateDto company) {
         companyService.updateCompany(company);
         return ResponseEntity.ok().build();

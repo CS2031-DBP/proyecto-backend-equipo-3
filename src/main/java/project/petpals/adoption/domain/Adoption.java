@@ -9,6 +9,7 @@ import project.petpals.company.domain.Company;
 import project.petpals.person.domain.Person;
 import project.petpals.pet.domain.Pet;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,7 +25,7 @@ public class Adoption {
     private String description;
 
     @Column(name = "adoption_date")
-    private LocalDateTime adoptionDate;
+    private LocalDate adoptionDate;
 
     @MapsId("personId")
     @ManyToOne(fetch = FetchType.EAGER)

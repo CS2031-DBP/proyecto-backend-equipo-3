@@ -25,7 +25,7 @@ public class ActivityController {
     private ActivityService activityService;
 
     @PreAuthorize("hasRole('ROLE_PERSON') or hasRole('ROLE_COMPANY')")
-    @GetMapping("type/{type}")
+    @GetMapping("/type/{type}")
     public ResponseEntity<Page<ActivityResponseDto>> getActivityByType(
             @PathVariable ActivityType type, @RequestParam int page, @RequestParam int size) {
         return ResponseEntity.ok(activityService.getActivityByType(type, page, size));
@@ -33,19 +33,19 @@ public class ActivityController {
 
 
     @PreAuthorize("hasRole('ROLE_PERSON') or hasRole('ROLE_COMPANY')")
-    @GetMapping("date/{date}")
+    @GetMapping("/date/{date}")
     public ResponseEntity<Page<ActivityResponseDto>> getActivitiesByDate(@PathVariable LocalDate date, @RequestParam int page, @RequestParam int size) {
         return ResponseEntity.ok(activityService.getActivitiesByDate(date, page, size));
     }
 
     @PreAuthorize("hasRole('ROLE_PERSON') or hasRole('ROLE_COMPANY')")
-    @GetMapping("company/{companyId}")
+    @GetMapping("/company/{companyId}")
     public ResponseEntity<Page<ActivityResponseDto>> getActivitiesByCompany(@PathVariable Long companyId, @RequestParam int page, @RequestParam int size) {
         return ResponseEntity.ok(activityService.getActivitiesByCompany(companyId, page, size));
     }
 
     @PreAuthorize("hasRole('ROLE_PERSON') or hasRole('ROLE_COMPANY')")
-    @GetMapping("status/{status}")
+    @GetMapping("/status/{status}")
     public ResponseEntity<Page<ActivityResponseDto>> getActivitiesByStatus(@PathVariable ActivityStatus status, @RequestParam int page, @RequestParam int size) {
         return ResponseEntity.ok(activityService.getActivitiesByStatus(status, page, size));
     }

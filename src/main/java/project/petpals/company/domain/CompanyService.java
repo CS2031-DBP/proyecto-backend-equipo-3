@@ -59,7 +59,7 @@ public class CompanyService {
         Company company = companyRepository.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("Company with email " + email + " not found"));
 
-        company.setPassword(companySelfUpdateDto.getPassword());
+        company.setName(companySelfUpdateDto.getName());
         company.setLastUpdated(LocalDateTime.now());
         companyRepository.save(company);
     }

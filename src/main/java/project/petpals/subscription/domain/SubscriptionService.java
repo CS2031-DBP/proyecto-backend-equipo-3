@@ -8,6 +8,7 @@ import project.petpals.adoption.domain.PetPersonId;
 import project.petpals.auth.AuthUtils;
 import project.petpals.company.domain.Company;
 import project.petpals.company.infrastructure.CompanyRepository;
+import project.petpals.exceptions.ConflictException;
 import project.petpals.exceptions.NotFoundException;
 import project.petpals.exceptions.UnauthorizedAccessException;
 import project.petpals.person.domain.Person;
@@ -18,6 +19,7 @@ import project.petpals.subscription.infrastructure.SubscriptionRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class SubscriptionService {
@@ -31,23 +33,27 @@ public class SubscriptionService {
     @Autowired
     private AuthUtils authUtils;
 
-    public void saveSubscription(NewSubscriptionDto newSubscriptionDto) {
+    public void saveSubscription(Long companyId, NewSubscriptionDto newSubscriptionDto) {
         // get user from current security context
         String email = authUtils.getCurrentUserEmail();
 
         Person person = personRepository.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("Person not found"));
-        Company company = companyRepository.findById(newSubscriptionDto.getCompanyId()).orElseThrow(
+        Company company = companyRepository.findById(companyId).orElseThrow(
                 () -> new NotFoundException("Company not found"));
 
+        Optional<Subscription> found = subscriptionRepository.findById(new PersonCompanyId(company.getId(),person.getId()));
+        if (found.isPresent()) throw new ConflictException("Subscription already exists");
+
         Subscription subscription = new Subscription();
-        PersonCompanyId subscriptionId = new PersonCompanyId(person.getId(), company.getId());
+        PersonCompanyId subscriptionId = new PersonCompanyId(company.getId(), person.getId());
         subscription.setId(subscriptionId);
         subscription.setPerson(person);
         subscription.setCompany(company);
         subscription.setStatus(Status.ACTIVE);
         subscription.setSubscriptionDate(LocalDateTime.now());
         subscription.setReceiveNotifs(newSubscriptionDto.getReceiveNotifs());
+        subscriptionRepository.save(subscription);
     }
 
     public Page<Subscription> getSubscriptionByCompany(int page, int size) {
@@ -71,14 +77,17 @@ public class SubscriptionService {
         return subscriptionRepository.findAllByPersonId(person.getId());
     }
 
-    public void deleteSubscription(PersonCompanyId subscriptionId) {
+    public void deleteSubscription(Long companyId) {
         // get user from current security context
+        String email = authUtils.getCurrentUserEmail();
+        Person owner = personRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException("Person not found"));
 
-        Subscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow(
+        Subscription subscription = subscriptionRepository.findById(new PersonCompanyId( companyId,owner.getId())).orElseThrow(
                 () -> new NotFoundException("Subscription not found"));
-        if (!authUtils.isResourceOwner(subscription.getPerson().getId())) {
-            throw new UnauthorizedAccessException("You are not allowed to delete this subscription");
-        }
+//        if (!authUtils.isResourceOwner(subscription.getPerson().getId())) {
+//            throw new UnauthorizedAccessException("You are not allowed to delete this subscription");
+//        }
 
         subscription.setStatus(Status.CANCELLED);
         subscriptionRepository.save(subscription);

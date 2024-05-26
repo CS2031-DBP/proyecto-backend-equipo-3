@@ -79,13 +79,14 @@ public class AdoptionRepositoryTest extends AbstractContainerBaseTest {
         pet.setSex("male");
         pet.setWeight(34.2);
         pet.setSpecies(Species.DOG);
+        pet.setDescription("A very good dog. Likes to play fetch.");
         entityManager.persist(pet);
 
         adoptionId = new PetPersonId(pet.getId(), person.getId());
 
         adoption = new Adoption();
         adoption.setId(adoptionId);
-        adoption.setAdoptionDate(LocalDateTime.of(2020, 1, 1, 1, 1));
+        adoption.setAdoptionDate(LocalDate.of(2020,  1, 1));
         adoption.setDescription("Happy pet");
         adoption.setCompany(company);
         adoption.setPet(pet);
@@ -99,7 +100,7 @@ public class AdoptionRepositoryTest extends AbstractContainerBaseTest {
     void testCreation() {
         Adoption foundAdoption = adoptionRepository.findById(adoptionId).orElse(null);
         assertNotNull(foundAdoption);
-        assertEquals(LocalDateTime.of(2020, 1, 1, 1, 1), foundAdoption.getAdoptionDate());
+        assertEquals(LocalDate.of(2020, 1,  1), foundAdoption.getAdoptionDate());
         assertEquals("Happy pet", foundAdoption.getDescription());
         assertEquals(company, foundAdoption.getCompany());
         assertEquals(pet, foundAdoption.getPet());
