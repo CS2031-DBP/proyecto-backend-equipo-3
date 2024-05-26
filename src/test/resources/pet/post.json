@@ -1,0 +1,9 @@
+{
+  "name":"Pelusa",
+  "birthDate":"2022-01-01",
+  "sex":"female",
+  "breed":"Golden Retriever",
+  "weight":20.5,
+  "description":"Pelusa is a very friendly dog, she loves to play.",
+  "species": "DOG"
+}

@@ -3,6 +3,7 @@ package project.petpals.adoption.application;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import project.petpals.activity.domain.Activity;
 import project.petpals.activity.dtos.ActivityResponseDto;
@@ -27,14 +28,15 @@ public class AdoptionController {
         return ResponseEntity.ok(adoptionService.getAdoption(adoptionId));
     }
 
+    @PreAuthorize("hasRole('ROLE_PERSON')")
     @GetMapping("/mine")
     public ResponseEntity<Page<AdoptionResponseDto>> getAdoptionByUser(@RequestParam int page, @RequestParam int size) {
         return ResponseEntity.ok(adoptionService.getAdoptionsByUser(page, size));
     }
 
-    @PostMapping()
-    public ResponseEntity<Void> saveAdoption(@RequestBody NewAdoptionDto newAdoptionDto) {
-        adoptionService.saveAdoption(newAdoptionDto);
+    @PostMapping("/{petId}")
+    public ResponseEntity<Void> saveAdoption(@PathVariable Long petId, @RequestBody NewAdoptionDto newAdoptionDto) {
+        adoptionService.saveAdoption(petId, newAdoptionDto);
         return ResponseEntity.created(null).build();
     }
 }

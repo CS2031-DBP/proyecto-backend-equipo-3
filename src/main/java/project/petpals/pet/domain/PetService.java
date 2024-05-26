@@ -5,18 +5,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import project.petpals.adoption.domain.Adoption;
 import project.petpals.adoption.infrastructure.AdoptionRepository;
 import project.petpals.auth.AuthUtils;
 import project.petpals.company.domain.Company;
 import project.petpals.company.domain.CompanyService;
 import project.petpals.company.infrastructure.CompanyRepository;
 import project.petpals.exceptions.NotFoundException;
+import project.petpals.exceptions.UnauthorizedAccessException;
 import project.petpals.pet.dtos.NewPetDto;
 import project.petpals.pet.dtos.PetDto;
 import project.petpals.pet.dtos.UpdatePetDto;
 import project.petpals.pet.infrastructure.PetRepository;
 
 import java.nio.file.AccessDeniedException;
+import java.util.Objects;
 
 @Service
 public class PetService {
@@ -33,13 +36,25 @@ public class PetService {
     private AuthUtils authUtils;
 
     public PetDto getPet(Long petId) {
-        // verify person is OWNER Of the pet?
         Pet pet = petRepository.findById(petId).orElseThrow(
                 () -> new NotFoundException("Pet with id " + petId + " not found")
         );
 
-    // Change to get Person from current context and verify ownership
-        return modelMapper.map(pet, PetDto.class);
+        String currentEmail = authUtils.getCurrentUserEmail();
+        // verify if current user is the owner of the pet
+        if (pet.getCompany().getEmail().equals(currentEmail)) {
+            return modelMapper.map(pet, PetDto.class);
+        }
+
+        if(pet.getPetStatus() == PetStatus.ADOPTED){
+            Adoption adoption = adoptionRepository.findByPetId(petId).orElseThrow(
+                () -> new NotFoundException("Adoption not found for pet with id " + petId)
+            );
+            if (adoption.getPerson().getEmail().equals(currentEmail)) {
+                return modelMapper.map(pet, PetDto.class);
+            }
+        }
+          throw new UnauthorizedAccessException("Unauthorized to access pet");
     }
 
     // rename to FindAllBySpecies
@@ -97,6 +112,14 @@ public class PetService {
 
         // verify if current user is the owner of the pet
         // by checking in the adoption list and accessing current security context
+        String email = authUtils.getCurrentUserEmail();
+        Adoption adoption = adoptionRepository.findByPetId(petId).orElseThrow(
+                () -> new NotFoundException("Adoption not found for pet with id " + petId)
+        );
+        if (!(Objects.equals(adoption.getPerson().getEmail(), email))) {
+            throw new UnauthorizedAccessException("Unauthorized to update pet");
+        }
+
         pet.setWeight(updatePetDto.getWeight());
         pet.setDescription(updatePetDto.getDescription());
         petRepository.save(pet);

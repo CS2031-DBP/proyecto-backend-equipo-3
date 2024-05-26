@@ -43,7 +43,7 @@ public class Pet {
     @Column(name = "description", nullable = false)
     String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Company company;
 
 }

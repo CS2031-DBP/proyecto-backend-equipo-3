@@ -32,7 +32,7 @@ public class Adoption {
     private Person person;
 
     @MapsId("petId")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private Pet pet;
 
     @ManyToOne(fetch = FetchType.EAGER)

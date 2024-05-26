@@ -39,7 +39,7 @@ public class PetController {
 
     @PreAuthorize("hasRole('ROLE_COMPANY') or hasRole('ROLE_PERSON')")
     @GetMapping("/company/{companyId}")
-    public ResponseEntity<Page<PetDto>> findAllByBreed(
+    public ResponseEntity<Page<PetDto>> findAllByCompany(
             @PathVariable Long companyId,
             @RequestParam int page,
             @RequestParam int size

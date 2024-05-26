@@ -48,7 +48,10 @@ public class AdoptionService {
         return res;
     }
 
-    public void saveAdoption(NewAdoptionDto newAdoptionDto) {
+    public void saveAdoption(Long petId, NewAdoptionDto newAdoptionDto) {
+
+        System.out.println("NewAdoptionDto: " + newAdoptionDto);
+
         // get person from security context
         String email = authUtils.getCurrentUserEmail();
 
@@ -56,16 +59,21 @@ public class AdoptionService {
                 () -> new NotFoundException("Person not found!"));
 
 
-        PetPersonId adoptionId = new PetPersonId(newAdoptionDto.getPetId(), person.getId());
-        if (adoptionRepository.findByPetId(newAdoptionDto.getPetId()).isPresent()) {
+        PetPersonId adoptionId = new PetPersonId(petId, person.getId());
+        if (adoptionRepository.findByPetId(petId).isPresent()) {
             throw new ConflictException("Adoption already exists!");
         }
 
-        Pet pet = petRepository.findById(newAdoptionDto.getPetId()).orElseThrow(
+        Pet pet = petRepository.findById(petId).orElseThrow(
                 () -> new NotFoundException("Pet not found!"));
 
         Company company = companyRepository.findById(pet.getCompany().getId()).orElseThrow(
                 () -> new NotFoundException("Company not found!"));
+
+        System.out.println("NewAdoptionDto: " + newAdoptionDto);
+        System.out.println("Pet: " + pet);
+        System.out.println("Person: " + person);
+
         pet.setPetStatus(PetStatus.ADOPTED);
         petRepository.save(pet);
 
