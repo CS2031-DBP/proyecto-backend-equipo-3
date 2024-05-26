@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -66,8 +67,8 @@ public class ActivityRepositoryTest extends AbstractContainerBaseTest {
         activity.setName("Ciencia de Gatos");
         activity.setCompany(company);
         activity.getLocations().add(location);
-        activity.setStartDate(LocalDateTime.of(2020,1,1,1,1));
-        activity.setEndDate(LocalDateTime.of(2020,1,1,1,1));
+        activity.setStartDate(LocalDate.of(2020,1,1));
+        activity.setEndDate(LocalDate.of(2020,1,1));
         entityManager.persist(activity);
 
         entityManager.flush();
@@ -83,8 +84,8 @@ public class ActivityRepositoryTest extends AbstractContainerBaseTest {
         assertEquals("Ciencia de Gatos", foundActivity.getName());
         assertEquals(company, foundActivity.getCompany());
         assertEquals(location, foundActivity.getLocations().get(0));
-        assertEquals(LocalDateTime.of(2020,1,1,1,1), foundActivity.getStartDate());
-        assertEquals(LocalDateTime.of(2020,1,1,1,1), foundActivity.getEndDate());
+        assertEquals(LocalDate.of(2020,1,1), foundActivity.getStartDate());
+        assertEquals(LocalDate.of(2020,1,1), foundActivity.getEndDate());
     }
 
     @Test
@@ -113,8 +114,8 @@ public class ActivityRepositoryTest extends AbstractContainerBaseTest {
 
     @Test
     void testFindAllByStartDateGreaterThan() {
-        LocalDateTime date1 = LocalDateTime.of(2019,11,1,1,0);
-        LocalDateTime date2 = LocalDateTime.of(2024,1,1,1,1);
+        LocalDate date1 = LocalDate.of(2019,11,1);
+        LocalDate date2 = LocalDate.of(2024,1,1);
         Page<Activity> activities1 = activityRepository.findAllByStartDateGreaterThan(date1, PageRequest.of(0,5));
         Page<Activity> activities2 = activityRepository.findAllByStartDateGreaterThan(date2, PageRequest.of(0,5));
 
@@ -134,5 +135,12 @@ public class ActivityRepositoryTest extends AbstractContainerBaseTest {
         assertNotNull(foundCompany);
         Location foundLocation = locationRepository.findById(this.location.getId()).orElse(null);
         assertNotNull(foundLocation);
+    }
+
+    @Test
+    void findAllByCompanyId() {
+        Page<Activity> foundActivities = activityRepository.findAllByCompanyId(company.getId(), PageRequest.of(0,5));
+        assertNotNull(foundActivities);
+        assertEquals(activity, foundActivities.getContent().get(0));
     }
 }

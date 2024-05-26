@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 import project.petpals.activity.domain.ActivityType;
 import project.petpals.company.domain.Company;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -17,9 +18,9 @@ public class NewActivityDto {
     @Size(min = 2, max = 50)
     private String name;
     @NotNull
-    private LocalDateTime endDate;
+    private LocalDate endDate;
     @NotNull
-    private LocalDateTime startDate;
+    private LocalDate startDate;
     @NotNull
     private ActivityType activityType;
 

@@ -39,7 +39,6 @@ public class NewPetDtoValidationTest {
         newPetDto.setBreed("Poodle");
         newPetDto.setWeight(-1.0);
         newPetDto.setSpecies(Species.DOG);
-        newPetDto.setCompanyId(-1L);
         newPetDto.setBirthDate(LocalDate.now());
         var violations = validator.validate(newPetDto);
         assertEquals(3, violations.size());

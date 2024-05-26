@@ -9,6 +9,7 @@ import project.petpals.company.domain.Company;
 import project.petpals.person.domain.Person;
 import project.petpals.pet.domain.Pet;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,16 +25,16 @@ public class Adoption {
     private String description;
 
     @Column(name = "adoption_date")
-    private LocalDateTime adoptionDate;
+    private LocalDate adoptionDate;
 
     @MapsId("personId")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Person person;
 
     @MapsId("petId")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private Pet pet;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Company company;
 }

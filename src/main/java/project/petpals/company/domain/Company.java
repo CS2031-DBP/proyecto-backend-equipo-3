@@ -21,7 +21,7 @@ import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Company extends User {
 
-    @Column(name = "ruc", nullable = false)
+    @Column(name = "ruc", nullable = false, unique = true)
     String ruc;
 
     @OneToMany

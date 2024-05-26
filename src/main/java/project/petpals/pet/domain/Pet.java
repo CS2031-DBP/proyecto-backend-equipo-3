@@ -40,7 +40,10 @@ public class Pet {
     @Column(name = "species", nullable = false)
     private Species species;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "description", nullable = false)
+    String description;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     private Company company;
 
 }

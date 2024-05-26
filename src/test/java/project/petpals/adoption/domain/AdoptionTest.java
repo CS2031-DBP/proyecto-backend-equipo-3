@@ -57,7 +57,7 @@ public class AdoptionTest {
 
         adoption = new Adoption();
         adoption.setId(adoptionId);
-        adoption.setAdoptionDate(LocalDateTime.of(2020, 1, 1, 1, 1));
+        adoption.setAdoptionDate(LocalDate.of(2020, 1, 1));
         adoption.setDescription("Happy pet");
         adoption.setCompany(company);
         adoption.setPet(pet);
@@ -66,7 +66,7 @@ public class AdoptionTest {
 
     @Test
     void testCreation() {
-        assertEquals(LocalDateTime.of(2020, 1, 1, 1, 1), adoption.getAdoptionDate());
+        assertEquals(LocalDate.of(2020, 1,  1), adoption.getAdoptionDate());
         assertEquals("Happy pet", adoption.getDescription());
         assertEquals(company, adoption.getCompany());
         assertEquals(pet, adoption.getPet());

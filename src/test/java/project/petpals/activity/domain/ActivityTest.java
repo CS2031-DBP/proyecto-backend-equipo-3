@@ -6,6 +6,7 @@ import project.petpals.user.domain.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,8 +39,8 @@ public class ActivityTest {
         activity.setName("Ciencia de Gatos");
         activity.setCompany(company);
         activity.getLocations().add(location);
-        activity.setStartDate(LocalDateTime.of(2020,1,1,1,1));
-        activity.setEndDate(LocalDateTime.of(2020,1,1,1,1));
+        activity.setStartDate(LocalDate.of(2020,1,1));
+        activity.setEndDate(LocalDate.of(2020,1,1));
     }
 
     @Test
@@ -49,8 +50,8 @@ public class ActivityTest {
         assertEquals("Ciencia de Gatos", activity.getName());
         assertEquals(company, activity.getCompany());
         assertEquals(location, activity.getLocations().get(0));
-        assertEquals(LocalDateTime.of(2020,1,1,1,1), activity.getStartDate());
-        assertEquals(LocalDateTime.of(2020,1,1,1,1), activity.getEndDate());
+        assertEquals(LocalDate.of(2020,1,1), activity.getStartDate());
+        assertEquals(LocalDate.of(2020,1,1), activity.getEndDate());
 
     }
 }
