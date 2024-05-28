@@ -1,6 +1,7 @@
 package project.petpals.pet.application;
 
 import org.json.JSONObject;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +92,13 @@ public class PetApplicationTest {
         JSONObject jsonObject = new JSONObject(Objects.requireNonNull(res1.getResponse().getContentAsString()));
         companyToken = jsonObject.getString("token");
         System.out.println(companyRepository.findAll().get(0).toString());
+    }
+
+    @AfterEach
+    void clearDataBase() {
+        adoptionRepository.deleteAll();
+        petRepository.deleteAll();
+
     }
 
     @Test
@@ -270,6 +278,12 @@ public class PetApplicationTest {
                 .header("Authorization","Bearer " + personToken)).andExpect(status().isOk()).andReturn();
         JSONObject response = new JSONObject(Objects.requireNonNull(res.getResponse().getContentAsString()));
         assertEquals("Pelusa", response.getString("name"));
+
+//        end();
+    }
+
+    void end() {
+        petRepository.deleteAll();
     }
 
 }

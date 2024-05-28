@@ -1,5 +1,6 @@
 package project.petpals.adoption.infrastructure;
 
+import org.junit.jupiter.api.AfterEach;
 import project.petpals.adoption.domain.Adoption;
 import project.petpals.adoption.domain.PetPersonId;
 import project.petpals.company.domain.Company;
@@ -96,6 +97,12 @@ public class AdoptionRepositoryTest extends AbstractContainerBaseTest {
         entityManager.flush();
     }
 
+    @AfterEach
+    void clearDataBase() {
+        adoptionRepository.deleteAll();
+        petRepository.deleteAll();
+    }
+
     @Test
     void testCreation() {
         Adoption foundAdoption = adoptionRepository.findById(adoptionId).orElse(null);
@@ -114,4 +121,6 @@ public class AdoptionRepositoryTest extends AbstractContainerBaseTest {
         assertNotNull(petRepository.findById(pet.getId()).orElse(null));
         assertNotNull(companyRepository.findById(company.getId()).orElse(null));
     }
+
+
 }

@@ -1,10 +1,7 @@
 package project.petpals.activity.application;
 
 import org.json.JSONObject;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -84,6 +81,11 @@ public class ActivityControllerTest {
 
         JSONObject jsonObject = new JSONObject(Objects.requireNonNull(res.getResponse().getContentAsString()));
         token = jsonObject.getString("token");
+    }
+
+    @AfterEach
+    void clearDataBase() {
+        activityRepository.deleteAll();
     }
 
     @Test

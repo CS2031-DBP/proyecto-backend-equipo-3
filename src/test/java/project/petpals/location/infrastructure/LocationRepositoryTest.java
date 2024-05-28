@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataJpaTest
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class LocationRepositoryTest extends AbstractContainerBaseTest {
+public class    LocationRepositoryTest extends AbstractContainerBaseTest {
 
     @Autowired
     private LocationRepository locationRepository;
@@ -42,9 +42,9 @@ public class LocationRepositoryTest extends AbstractContainerBaseTest {
             Location retrievedLocation = locationRepository.findById(location.getId()).orElse(null);
             assertNotNull(retrievedLocation);
             assertNotNull(retrievedLocation.getId());
-            assertEquals(location.getLatitude(), 1.0);
-            assertEquals(location.getLongitude(), -1.0);
-            assertEquals(location.getAddress(), "Test Address");
+            assertEquals(retrievedLocation.getLatitude(), 1.0);
+            assertEquals(retrievedLocation.getLongitude(), -1.0);
+            assertEquals(retrievedLocation.getAddress(), "Test Address");
         }
 
         @Test
@@ -60,6 +60,6 @@ public class LocationRepositoryTest extends AbstractContainerBaseTest {
             location2.setAddress("Test Address 2");
             locationRepository.save(location2);
 
-            assertEquals(locationRepository.findAll().size(), 3);
+            assertEquals(locationRepository.count(), 3);
         }
 }

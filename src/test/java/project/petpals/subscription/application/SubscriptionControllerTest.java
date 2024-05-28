@@ -2,6 +2,8 @@ package project.petpals.subscription.application;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import project.petpals.company.infrastructure.CompanyRepository;
 import project.petpals.exceptions.NotFoundException;
 import project.petpals.person.domain.Person;
 import project.petpals.person.infrastructure.PersonRepository;
+import project.petpals.pet.domain.Pet;
+import project.petpals.pet.infrastructure.PetRepository;
 import project.petpals.subscription.domain.PersonCompanyId;
 import project.petpals.subscription.domain.Status;
 import project.petpals.subscription.domain.Subscription;
@@ -97,6 +101,11 @@ public class SubscriptionControllerTest {
                 .andReturn();
         JSONObject jsonObject2 = new JSONObject(Objects.requireNonNull(res2.getResponse().getContentAsString()));
         personToken = jsonObject2.getString("token");
+    }
+
+    @AfterEach
+    void clearDataBase() {
+        subscriptionRepository.deleteAll();
     }
 
     @Test
@@ -206,7 +215,7 @@ public class SubscriptionControllerTest {
     }
 
     @Test
-    public void attemptToSubscribeTwice() throws Exception {
+        public void attemptToSubscribeTwice() throws Exception {
         subscriptionRepository.deleteAll();
         String subscriptionJson = Reader.readJsonFile("/subscription/post.json");
         Company company = companyRepository.findAll().get(0);

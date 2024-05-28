@@ -1,6 +1,7 @@
 package project.petpals.adoption.application;
 
 import org.json.JSONObject;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +93,13 @@ public class AdoptionControllerTest {
         pet.setSpecies(Species.DOG);
     }
 
+
+    @AfterEach
+    void end() {
+        adoptionRepository.deleteAll();
+        petRepository.deleteAll();
+        companyRepository.deleteAll();
+    }
     @Test
     public void testSaveAdoption() throws Exception {
         String adoptionJson = Reader.readJsonFile("/adoption/post.json");
