@@ -9,7 +9,8 @@ Los integrantes de este grupo son:
 - Héctor Ponce de León Vargas
 - Andrea Coa  
 - Jesús Gadiel Balarde Tipte
-- Joaquin 
+- Joaquin
+- Elvis Lopez
 
 ## Descripción del proyecto
 
