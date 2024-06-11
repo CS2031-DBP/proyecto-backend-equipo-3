@@ -11,6 +11,7 @@ Los integrantes de este grupo son:
 - Jesús Gadiel Balarde Tipte
 - Joaquin
 - Elvis Lopez
+- Camila Milagros Coveñas Rojas
 
 ## Descripción del proyecto
 
