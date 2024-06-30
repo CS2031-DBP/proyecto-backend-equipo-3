@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import project.petpals.company.dtos.CompanyDto;
+import project.petpals.location.domain.Location;
 
 
 @Data
@@ -23,6 +24,7 @@ public class NewActivityDto {
     private LocalDate startDate;
     @NotNull
     private ActivityType activityType;
+    private Location location;
 
 }
 

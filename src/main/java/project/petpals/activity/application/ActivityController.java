@@ -71,5 +71,9 @@ public class ActivityController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ActivityResponseDto> getActivity(@PathVariable Long id) {
+        return ResponseEntity.ok(activityService.getActivity(id));
+    }
 
 }

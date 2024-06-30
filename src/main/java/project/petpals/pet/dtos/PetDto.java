@@ -6,6 +6,9 @@ import lombok.Data;
 
 @Data
 public class PetDto {
+    // added
+    @NotNull
+    private Long id;
     @NotNull
     @Size(min = 2, max = 50)
     private String name;

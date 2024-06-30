@@ -10,6 +10,7 @@ import project.petpals.company.domain.CompanyService;
 import project.petpals.company.dtos.CompanyDto;
 import project.petpals.company.dtos.CompanySelfResponseDto;
 import project.petpals.company.dtos.CompanySelfUpdateDto;
+import project.petpals.location.domain.Location;
 
 @RestController
 @RequestMapping("/company")
@@ -43,6 +44,12 @@ public class CompanyController {
     @PatchMapping()
     public ResponseEntity<Void> updateCompany(@RequestBody CompanySelfUpdateDto company) {
         companyService.updateCompany(company);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/location")
+    public ResponseEntity<Void> addCompanyLocation(@RequestBody Location location) {
+        companyService.addCompanyLocation(location);
         return ResponseEntity.ok().build();
     }
 }

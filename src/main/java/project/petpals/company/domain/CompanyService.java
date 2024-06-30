@@ -66,7 +66,7 @@ public class CompanyService {
 
     public void addCompanyLocation(Location location) {
         // get current user email
-        String email = "email";
+        String email = authUtils.getCurrentUserEmail();
 
         Company company = companyRepository.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("Company with email " + email + " not found"));

@@ -14,11 +14,14 @@ import project.petpals.company.domain.Company;
 import project.petpals.company.dtos.CompanyDto;
 import project.petpals.company.infrastructure.CompanyRepository;
 import project.petpals.exceptions.NotFoundException;
+import project.petpals.location.infrastructure.LocationRepository;
 
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ActivityService {
@@ -31,6 +34,8 @@ public class ActivityService {
     private CompanyRepository companyRepository;
     @Autowired
     private AuthUtils authUtils;
+    @Autowired
+    private LocationRepository locationRepository;
 
     private ActivityResponseDto convertToDTO(Activity activity) {
         ActivityResponseDto res = modelMapper.map(activity, ActivityResponseDto.class);
@@ -58,6 +63,12 @@ public class ActivityService {
         return activities.map(this::convertToDTO);
     }
 
+    public ActivityResponseDto getActivity(Long id) {
+        Activity activity = activityRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Activity not found"));
+        return convertToDTO(activity);
+    }
+
     public void saveActivity(NewActivityDto newActivityDto) {
         // find Company from security context
         String email = authUtils.getCurrentUserEmail();
@@ -66,6 +77,13 @@ public class ActivityService {
                 () -> new NotFoundException("Company not found"));
 
         Activity activity = modelMapper.map(newActivityDto, Activity.class);
+
+        // Added
+        if (newActivityDto.getLocation() != null) {
+            locationRepository.save(newActivityDto.getLocation());
+            activity.setLocations(List.of(newActivityDto.getLocation()));
+        }
+
         if (newActivityDto.getEndDate().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Start date cannot be in the past");
         }
