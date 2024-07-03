@@ -33,4 +33,6 @@ public class ActivityResponseDto {
     @NotNull
     private CompanyDto companyDto;
     List<Location> locations = new ArrayList<>();
+//    @NotNull
+    private String image;
 }

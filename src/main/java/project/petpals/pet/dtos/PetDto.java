@@ -17,5 +17,8 @@ public class PetDto {
     @NotNull
     @Size(min=2,max=50)
     private String breed;
-
+//    @NotNull
+    private String image;
+    //added
+    private String description;
 }

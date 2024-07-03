@@ -32,4 +32,7 @@ public class NewPetDto {
     @NotNull
     @Size(min = 2, max = 255)
     private String description;
+
+//    @NotNull
+    private String image;
 }

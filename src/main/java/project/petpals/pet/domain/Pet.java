@@ -43,6 +43,9 @@ public class Pet {
     @Column(name = "description", nullable = false)
     String description;
 
+    @Column(name="image")
+    private String image;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private Company company;
 
