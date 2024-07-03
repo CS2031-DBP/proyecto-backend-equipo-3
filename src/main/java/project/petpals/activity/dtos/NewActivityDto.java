@@ -25,6 +25,8 @@ public class NewActivityDto {
     @NotNull
     private ActivityType activityType;
     private Location location;
+//    @NotNull
+    private String image;
 
 }
 

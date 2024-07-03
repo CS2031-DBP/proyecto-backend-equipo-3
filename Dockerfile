@@ -1,5 +1,3 @@
-FROM openjdk:21-jdk
-WORKDIR /app
-COPY target/*.jar app.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+FROM openjdk:22
+COPY target/PetPals-0.0.1-SNAPSHOT.jar prueba.jar
+CMD ["java", "-jar", "prueba.jar"]

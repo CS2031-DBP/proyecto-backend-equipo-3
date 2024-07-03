@@ -56,7 +56,7 @@ public class ActivityController {
         activityService.saveActivity(newActivityDto);
         return ResponseEntity.created(null).build();
     }
-
+    
     // will updating activities be necessary?
 //    @PatchMapping("/{id}")
 //    public ResponseEntity<Void> updateActivity(@PathVariable Long id, @RequestBody Activity activity) {
@@ -75,5 +75,7 @@ public class ActivityController {
     public ResponseEntity<ActivityResponseDto> getActivity(@PathVariable Long id) {
         return ResponseEntity.ok(activityService.getActivity(id));
     }
+
+
 
 }

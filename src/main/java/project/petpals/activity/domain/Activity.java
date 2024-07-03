@@ -39,6 +39,9 @@ public class Activity {
     @Column(name = "activity_type", nullable = false)
     private ActivityType activityType;
 
+    @Column(name = "image")
+    private String image;
+
 
     @ManyToOne(fetch = FetchType.EAGER) // cascade = persist
     private Company company;
