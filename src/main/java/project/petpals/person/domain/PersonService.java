@@ -9,6 +9,7 @@ import project.petpals.person.dtos.PersonDto;
 import project.petpals.person.dtos.PersonSelfResponseDto;
 import project.petpals.person.dtos.PersonSelfUpdateDto;
 import project.petpals.person.infrastructure.PersonRepository;
+import project.petpals.user.dtos.ProfilePhoto;
 
 import java.time.LocalDateTime;
 
@@ -50,8 +51,32 @@ public class PersonService {
         );
 
         // update found person
-        found.setPassword(personSelfUpdateDto.getPassword());
+//        found.setPassword(personSelfUpdateDto.getPassword());
         found.setName(personSelfUpdateDto.getName());
+        found.setLastUpdated(LocalDateTime.now());
+        personRepository.save(found);
+    }
+
+    public void updateProfilePhoto(ProfilePhoto profilePhoto) {
+        String email = authUtils.getCurrentUserEmail();
+
+        Person found =  personRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException("Person not found")
+        );
+
+        found.setProfileImage(profilePhoto.getProfileImage());
+        found.setLastUpdated(LocalDateTime.now());
+        personRepository.save(found);
+    }
+
+    public void updateBannerPhoto(ProfilePhoto bannerPhoto) {
+        String email = authUtils.getCurrentUserEmail();
+
+        Person found =  personRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException("Person not found")
+        );
+
+        found.setBannerImage(bannerPhoto.getProfileImage());
         found.setLastUpdated(LocalDateTime.now());
         personRepository.save(found);
     }

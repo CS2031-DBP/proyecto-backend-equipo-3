@@ -9,6 +9,7 @@ import project.petpals.person.domain.PersonService;
 import project.petpals.person.dtos.PersonDto;
 import project.petpals.person.dtos.PersonSelfResponseDto;
 import project.petpals.person.dtos.PersonSelfUpdateDto;
+import project.petpals.user.dtos.ProfilePhoto;
 
 @RestController
 @RequestMapping("/person")
@@ -32,6 +33,18 @@ public class PersonController {
     @PatchMapping()
     public ResponseEntity<Void> updateSelf(@RequestBody PersonSelfUpdateDto personSelfUpdateDto) {
         personService.updatePerson(personSelfUpdateDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/me/photo")
+    public ResponseEntity<Void> updateProfilePhoto(@RequestBody ProfilePhoto profilePhoto) {
+        personService.updateProfilePhoto(profilePhoto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/me/banner")
+    public ResponseEntity<Void> updateBannerPhoto(@RequestBody ProfilePhoto bannerPhoto) {
+        personService.updateBannerPhoto(bannerPhoto);
         return ResponseEntity.ok().build();
     }
 }

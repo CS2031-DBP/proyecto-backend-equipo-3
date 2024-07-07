@@ -16,4 +16,6 @@ public class CompanySelfResponseDto {
     LocalDateTime lastUpdated;
     String ruc;
     List<Location> locations = new ArrayList<>();
+    private String profileImage;
+    private String bannerImage;
 }

@@ -11,6 +11,7 @@ import project.petpals.company.dtos.CompanyDto;
 import project.petpals.company.dtos.CompanySelfResponseDto;
 import project.petpals.company.dtos.CompanySelfUpdateDto;
 import project.petpals.location.domain.Location;
+import project.petpals.user.dtos.ProfilePhoto;
 
 @RestController
 @RequestMapping("/company")
@@ -50,6 +51,18 @@ public class CompanyController {
     @PatchMapping("/location")
     public ResponseEntity<Void> addCompanyLocation(@RequestBody Location location) {
         companyService.addCompanyLocation(location);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/me/photo")
+    public ResponseEntity<Void> updateProfilePhoto(@RequestBody ProfilePhoto profilePhoto) {
+        companyService.updateProfilePhoto(profilePhoto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/me/banner")
+    public ResponseEntity<Void> updateBannerPhoto(@RequestBody ProfilePhoto bannerPhoto) {
+        companyService.updateBannerPhoto(bannerPhoto);
         return ResponseEntity.ok().build();
     }
 }
