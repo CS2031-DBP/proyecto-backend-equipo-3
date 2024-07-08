@@ -47,4 +47,11 @@ public class SubscriptionController {
         subscriptionService.deleteSubscription(companyId);
         return ResponseEntity.noContent().build();
     }
+
+    @PreAuthorize("hasRole('ROLE_PERSON')")
+    @GetMapping("/mine/{companyId}")
+    public ResponseEntity<Subscription> getSubscription(@PathVariable Long companyId) {
+        return ResponseEntity.ok(subscriptionService.getSubscription(companyId));
+    }
+
 }

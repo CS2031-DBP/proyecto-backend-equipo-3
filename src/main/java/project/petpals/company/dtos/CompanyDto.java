@@ -18,5 +18,8 @@ public class CompanyDto {
     @Size(min = 8, max = 11)
     private String ruc;
     List<Location> locations = new ArrayList<>();
+    private String profileImage;
+    private String bannerImage;
+    private Long id;
 }
 

@@ -43,8 +43,13 @@ public class SubscriptionService {
                 () -> new NotFoundException("Company not found"));
 
         Optional<Subscription> found = subscriptionRepository.findById(new PersonCompanyId(company.getId(),person.getId()));
-        if (found.isPresent()) throw new ConflictException("Subscription already exists");
+        if (found.isPresent() && found.get().getStatus() == Status.ACTIVE) throw new ConflictException("Subscription already exists");
 
+//        if (found.isPresent() && found.get().getStatus() == Status.CANCELLED) {
+//            found.get().setStatus(Status.ACTIVE);
+//            subscriptionRepository.save(found.get());
+//            return;
+//        }
         Subscription subscription = new Subscription();
         PersonCompanyId subscriptionId = new PersonCompanyId(company.getId(), person.getId());
         subscription.setId(subscriptionId);
@@ -92,5 +97,17 @@ public class SubscriptionService {
         subscription.setStatus(Status.CANCELLED);
         subscriptionRepository.save(subscription);
 
+    }
+
+    public Subscription getSubscription(Long companyId) {
+        // get user from current security context
+        String email = authUtils.getCurrentUserEmail();
+        Person owner = personRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException("Person not found"));
+
+        Subscription found = subscriptionRepository.findById(new PersonCompanyId(companyId, owner.getId())).orElseThrow(
+                () -> new NotFoundException("Subscription not found"));
+        if (found.getStatus() == Status.CANCELLED) throw new NotFoundException("Subscription not found");
+        return found;
     }
 }

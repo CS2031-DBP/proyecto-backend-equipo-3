@@ -12,4 +12,6 @@ public class PersonSelfResponseDto {
     String email;
     LocalDateTime created;
     LocalDateTime lastUpdated;
+    private String profileImage;
+    private String bannerImage;
 }

@@ -14,6 +14,7 @@ import project.petpals.exceptions.NotFoundException;
 import project.petpals.location.domain.Location;
 import project.petpals.location.domain.LocationService;
 import project.petpals.location.infrastructure.LocationRepository;
+import project.petpals.user.dtos.ProfilePhoto;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -74,6 +75,30 @@ public class CompanyService {
         locationService.saveLocation(location);
 
         company.getLocations().add(location);
+        company.setLastUpdated(LocalDateTime.now());
+
+        companyRepository.save(company);
+    }
+
+    public void updateProfilePhoto(ProfilePhoto profilePhoto) {
+        String email = authUtils.getCurrentUserEmail();
+
+        Company company = companyRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException("Company with email " + email + " not found"));
+
+        company.setProfileImage(profilePhoto.getProfileImage());
+        company.setLastUpdated(LocalDateTime.now());
+
+        companyRepository.save(company);
+    }
+
+    public void updateBannerPhoto(ProfilePhoto bannerPhoto) {
+        String email = authUtils.getCurrentUserEmail();
+
+        Company company = companyRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException("Company with email " + email + " not found"));
+
+        company.setBannerImage(bannerPhoto.getProfileImage());
         company.setLastUpdated(LocalDateTime.now());
 
         companyRepository.save(company);
